@@ -1,4 +1,5 @@
-﻿using Game.Services;
+﻿using System;
+using Game.Services;
 using UnityEngine;
 
 namespace Game.Controllers.Camera
@@ -7,16 +8,40 @@ namespace Game.Controllers.Camera
     {
         private readonly CameraService _cameraService;
         private readonly GameConfig _gameConfig;
+        private readonly IUpdateProvider _updateProvider;
         private readonly HeroService _heroService;
-        
+        private IDisposable _updateFollowShiftRoutine;
+
+
         public CameraFollowController(CameraService cameraService, GameConfig gameConfig,
             IUpdateProvider updateProvider, HeroService heroService)
         {
             _cameraService = cameraService;
             _gameConfig = gameConfig;
+            _updateProvider = updateProvider;
             _heroService = heroService;
-
+            _heroService.Hero.HasWayPoint.Subscribe(HandleHeroIsMoving);
             updateProvider.OnTick.Subscribe(Update);
+        }
+
+        private void HandleHeroIsMoving(bool isMoving)
+        {
+            _updateFollowShiftRoutine?.Dispose();
+            if (!isMoving)
+            {
+                _cameraService.PositionShift.Value = Vector3.zero;
+            }
+            else
+            {
+                _updateFollowShiftRoutine = _updateProvider.OnTick.Subscribe(UpdateFollowShiftRoutine);
+
+            }
+        }
+
+        private void UpdateFollowShiftRoutine(float dt)
+        {
+            var dir = (_heroService.Hero.WayPoint.Value - _heroService.Hero.Position.Value).normalized;
+            _cameraService.PositionShift.Value = Vector3.Lerp(_cameraService.PositionShift.Value, dir * _gameConfig.CameraFollowShiftMagnitude, _gameConfig.CameraFollowShiftGrowSpeed * dt);
         }
 
         private void Update(float dt)
@@ -24,6 +49,7 @@ namespace Game.Controllers.Camera
             if(!_heroService.Hero.Selected.Value)
                 return;
 
+            var followPoint = _cameraService.PositionShift.Value + _heroService.Hero.Position.Value;
             var ray = _cameraService.Camera.Value.ViewportPointToRay(Vector2.one * 0.5f);
 
             var planeDifference = Vector3.zero;
@@ -31,13 +57,16 @@ namespace Game.Controllers.Camera
             if (plane.Raycast(ray, out var dist))
             {
                 var cameraCenterPointOnPlane = ray.GetPoint(dist);
-                planeDifference = _heroService.Hero.Position.Value - cameraCenterPointOnPlane;
+                planeDifference = followPoint - cameraCenterPointOnPlane;
             }
 
-            if(_gameConfig.FollowToleranceSq > planeDifference.sqrMagnitude)
+            if (_gameConfig.CameraFollowToleranceSq > planeDifference.sqrMagnitude)
+            {
+                _cameraService.PositionShift.Value = Vector3.zero;
                 return;
-            
-            _cameraService.Position.Value = Vector3.Lerp(_cameraService.Position.Value, _cameraService.Position.Value + planeDifference, dt * _gameConfig.FollowSpeed);
+            }
+
+            _cameraService.Position.Value = Vector3.Lerp(_cameraService.Position.Value, _cameraService.Position.Value + planeDifference, dt * _gameConfig.CameraFollowSpeed);
 
         }
 

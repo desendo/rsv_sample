@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Game.State.Data;
-using Game.State.Enum;
 using Game.State.Models;
 using UnityEngine;
 
@@ -21,29 +20,29 @@ namespace Game.Services
         public HeroModel Hero { get; } = new();
 
         public StorageModel HeroStorage { get; } = new();
+        public HeroParameters HeroParameters { get; } = new();
 
         public void LoadFrom(in StateData data)
         {
             Hero.Position.Value = data.HeroData.Position;
             Hero.Rotation.Value = Quaternion.Euler(0, data.HeroData.Rotation, 0);
-            Hero.MoveSpeed.Value = data.HeroData.MoveSpeed;
+            Hero.Speech.Value = data.HeroData.Speech;
             Hero.HasWayPoint.Value = data.HeroData.HasWayPoint;
             Hero.WayPoint.Value = data.HeroData.WayPoint;
             Hero.Selected.Value = data.HeroData.Selected;
 
-            if (data.HeroData.CurrentJob == null || data.HeroData.CurrentJob.JobId == JobEnum.None)
+            if (data.HeroData.CurrentJob == null)
                 Hero.CurrentJob.Value = null;
             else
                 Hero.CurrentJob.Value = new HeroModel.Job
                 {
                     JobTargetUid = data.HeroData.CurrentJob.JobTargetUid,
-                    JobId = data.HeroData.CurrentJob.JobId
                 };
 
             HeroStorage.Items.Clear();
             foreach (var dataItem in data.HeroStorageItems)
             {
-                var item = new ItemModel
+                var item = new StorageItemModel
                 {
                     TypeId = { Value = dataItem.TypeId },
                     UId = dataItem.UId,
@@ -54,10 +53,17 @@ namespace Game.Services
                     ViewPosition =
                     {
                         Value = dataItem.ViewPosition
-                    }
+                    },
+                    Mass = { Value = dataItem.Mass}
                 };
                 HeroStorage.Items.Add(item);
             }
+
+            HeroParameters.Hunger.Current.Value = data.HeroParametersData.Hunger;
+            HeroParameters.Hunger.Max.Value = data.HeroParametersData.HungerMax;
+            HeroParameters.MaxMass.Value = data.HeroParametersData.MaxMass;
+            HeroParameters.MaxMoveSpeed.Value = data.HeroParametersData.MaxMoveSpeed;
+            HeroParameters.MoveSpeedFactor.Value = data.HeroParametersData.MoveSpeedFactor;
         }
 
         List<IModel> IModelList<IModel>.GetList()
@@ -75,7 +81,7 @@ namespace Game.Services
             data.HeroData.Selected = Hero.Selected.Value;
             data.HeroData.Position = Hero.Position.Value;
             data.HeroData.Rotation = Hero.Rotation.Value.eulerAngles.y;
-            data.HeroData.MoveSpeed = Hero.MoveSpeed.Value;
+            data.HeroData.Speech = Hero.Speech.Value;
             data.HeroData.HasWayPoint = Hero.HasWayPoint.Value;
             data.HeroData.WayPoint = Hero.WayPoint.Value;
             data.HeroStorageItems = new List<ItemData>();
@@ -85,7 +91,6 @@ namespace Game.Services
                 data.HeroData.CurrentJob = new JobData
                 {
                     JobTargetUid = Hero.CurrentJob.Value.JobTargetUid,
-                    JobId = Hero.CurrentJob.Value.JobId
                 };
 
             data.HeroStorageItems.Clear();
@@ -93,15 +98,23 @@ namespace Game.Services
             {
                 item.PreSave
                     .Invoke(); //здесь мы эмиттим событие для того чтобы вьюхи успели сообщить нечто важное перед сохранением
+                //в данном случае вьюхи содержат физику и (не записывая в модель напрямую) сообщают о своем положении и вращении
 
                 data.HeroStorageItems.Add(new ItemData
                 {
                     TypeId = item.TypeId.Value,
                     UId = item.UId,
                     ViewRotation = item.ViewRotation.Value,
-                    ViewPosition = item.ViewPosition.Value
+                    ViewPosition = item.ViewPosition.Value,
+                    Mass = item.Mass.Value,
                 });
             }
+
+            data.HeroParametersData.Hunger = HeroParameters.Hunger.Current.Value;
+            data.HeroParametersData.HungerMax = HeroParameters.Hunger.Max.Value;
+            data.HeroParametersData.MaxMass = HeroParameters.MaxMass.Value;
+            data.HeroParametersData.MaxMoveSpeed = HeroParameters.MaxMoveSpeed.Value;
+            data.HeroParametersData.MoveSpeedFactor = HeroParameters.MoveSpeedFactor.Value;
         }
     }
 }

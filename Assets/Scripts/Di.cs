@@ -33,22 +33,28 @@ namespace Game
 
             //controllers
             AddInject<LoadGameConfigController>(); // <----- игра начинается тут (загружаем конфиги)
-            AddInject<LoadStartGameStateController>(); // <----- и тут (загружаем изначальное состояние из SO)
+            AddInject<LoadStartGameStateController>(); // <----- и тут (загружаем изначальное состояние из StateData
+                                                       // который сериализован в ассете DefaultStateDataContainer)
 
             AddInject<PauseController>();
             AddInject<SaveLoadRestartController>();
 
             AddInject<SelectWorldViewsController>();
+            AddInject<HoverAndHintWorldViewsController>();
             AddInject<HandleActionRequestForHeroController>();
             AddInject<DoHeroJobController>();
+            AddInject<CalculateItemsMassController>();
+            AddInject<MassEffectController>();
+            AddInject<CancelHeroJobController>();
             AddInject<SetHeroMoveWayPointByGroundClickController>();
             AddInject<MoveHeroByWayPointController>();
             AddInject<DropItemsController>();
+            AddInject<ConsumeItemsController>();
 
+            AddInject<CameraZoomController>();
             AddInject<CameraFollowController>();
             AddInject<CameraRotateController>();
 
-            AddInject<SimplePopupController>();
             AddInject<ActualizeBagItemsController>();
         }
 

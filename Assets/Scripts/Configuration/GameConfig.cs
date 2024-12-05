@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Game.State.Enum;
 using Game.Views.Environment.Items;
 using Game.Views.UI;
 using UnityEngine;
@@ -12,15 +11,45 @@ namespace Game
     [Serializable]
     public class GameConfig
     {
+        [Header("Prefabs")]
         public List<PrefabEntry<WorldResourceView>> ResourcePrefabEntries;
         public List<PrefabEntry<WorldItemView>> WorldItemsPrefabEntries;
         public List<PrefabEntry<BagItemView>> BagItemViewPrefabEntries;
+        public List<StringId<List<Result>>> ItemActionsResult;
+        public List<StringId<float>> ItemMasses;
+        [Header("Strings")]
         public Localization Localization;
-        public float InteractionDistance;
+        [Header("Common parameters")]
+        public float HeroInteractionDistance;
         public float SpeechBubbleTime;
-        public float FollowToleranceSq;
-        public float FollowSpeed;
-        public float RotationSpeed = 1f;
+        public float CameraZoomMinHeight;
+        public float CameraZoomMaxHeight;
+        public float CameraZoomStep;
+        public float CameraFollowToleranceSq;
+        public float CameraFollowSpeed;
+        public float CameraRotationSpeed = 1f;
+        public float HintShowDelay = 0.5f;
+        public float HintHideDelay = 1.5f;
+        public float CameraFollowShiftGrowSpeed;
+        public float CameraFollowShiftMagnitude;
+
+        public float GetItemMass(string typeIdValue)
+        {
+            StringId<float> entry = null;
+            foreach (var x in ItemMasses)
+            {
+                if (x.Id == typeIdValue)
+                {
+                    entry = x;
+                    break;
+                }
+            }
+
+            if (entry == null)
+                return 1;
+
+            return entry.Value;
+        }
     }
 
     [Serializable]
@@ -28,9 +57,8 @@ namespace Game
     {
         [SerializeField] private List<ObjectTitleEntry> _objectTitleEntries = new();
 
-        [SerializeField] private List<CommonModelEntry> _commonModelEntries = new();
-        [SerializeField] private List<JobEntry> _jobEntries = new();
 
+        //linq для читаемости
         public string GetObjectProduct(string id)
         {
             return _objectTitleEntries.FirstOrDefault(x => x.Id == id)?.Product;
@@ -51,14 +79,7 @@ namespace Game
             return _objectTitleEntries.FirstOrDefault(x => x.Id == id)?.Title;
         }
 
-        public string GetCommonModelTypeTitle(string id)
-        {
-            return _commonModelEntries.FirstOrDefault(x => x.Id == id)?.Title;
-        }
-        public string GetJobTitle(JobEnum jobEnum)
-        {
-            return _jobEntries.FirstOrDefault(x => x.Job == jobEnum)?.Title;
-        }
+
         [Serializable]
         public class ObjectTitleEntry
         {
@@ -79,16 +100,43 @@ namespace Game
         [Serializable]
         public class JobEntry
         {
-            public JobEnum Job;
             public string Title;
         }
 
     }
-
     [Serializable]
-    public class PrefabEntry<T>
+    public class PrefabEntry<T> where T : Component
     {
         public string Id;
         public T Prefab;
+    }
+    [Serializable]
+    public class StringId<T>
+    {
+        public string Id;
+        public T Value;
+    }
+
+    public enum ActionType
+    {
+        Consume,
+
+    }
+    public enum InstantEffectType
+    {
+        ReduceHunger,
+
+    }
+    [Serializable]
+    public class Result
+    {
+        public ActionType ActionType;
+        public List<InstantEffect> InstantEffects;
+    }
+    [Serializable]
+    public class InstantEffect
+    {
+        public InstantEffectType InstantEffectType;
+        public int Value;
     }
 }

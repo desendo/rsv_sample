@@ -5,12 +5,12 @@ using Game.State.Models;
 using Game.Views.Environment.Items;
 using UnityEngine;
 
-namespace Game.Views.Environment.ResourceViews
+namespace Game.Views.Environment.Items
 {
     public class AllWorldItemsView : MonoBehaviour
     {
-        private readonly List<WorldItemView>
-            _views = new(); //сделано без пула. но если делать пул то он должен быть в этом классе
+        //todo pools
+        private readonly List<WorldItemView> _views = new();
 
         private GameConfig _gameConfig;
         private WorldItemsService _worldItemsService;
@@ -20,14 +20,15 @@ namespace Game.Views.Environment.ResourceViews
             _gameConfig = Di.Instance.Get<GameConfig>();
             _worldItemsService = Di.Instance.Get<WorldItemsService>();
 
-            HandleNewResourcesList(_worldItemsService.WorldItemModels.ToList());
-            _worldItemsService.WorldItemModels.OnNew.Subscribe(HandleNewResourcesList);
-            _worldItemsService.WorldItemModels.OnClear.Subscribe(Clear);
-            _worldItemsService.WorldItemModels.OnAdd.Subscribe(HandleNewResourceModelAdd);
-            _worldItemsService.WorldItemModels.OnRemove.Subscribe(HandleNewResourceModelRemove);
+            HandleNewWorldItemModelsList(_worldItemsService.WorldItemModels.ToList());
+
+            _worldItemsService.WorldItemModels.OnNew.Subscribe(HandleNewWorldItemModelsList);
+            _worldItemsService.WorldItemModels.OnClear.Subscribe(ClearWorldItemModelList);
+            _worldItemsService.WorldItemModels.OnAdd.Subscribe(HandleWorldItemModelAdd);
+            _worldItemsService.WorldItemModels.OnRemove.Subscribe(HandleWorldItemModelRemove);
         }
 
-        private void HandleNewResourceModelRemove(WorldItemModel obj)
+        private void HandleWorldItemModelRemove(WorldItemModel obj)
         {
             var count = _views.Count;
             for (var index = 0; index < count; index++)
@@ -43,22 +44,30 @@ namespace Game.Views.Environment.ResourceViews
             }
         }
 
-        private void HandleNewResourceModelAdd(WorldItemModel obj)
+        private void HandleWorldItemModelAdd(WorldItemModel model)
         {
-            AddSingleView(obj);
+            AddSingleView(model);
         }
 
-        private void HandleNewResourcesList(List<WorldItemModel> obj)
+        private void HandleNewWorldItemModelsList(List<WorldItemModel> obj)
         {
-            Clear();
+            ClearWorldItemModelList();
             foreach (var resourceModel in obj) AddSingleView(resourceModel);
         }
 
         private void AddSingleView(WorldItemModel model)
         {
-            //здесь мы используем линк, но можно (и нужно) сделать кеширование по айдишникам в GameConfig
-            var prefab = _gameConfig.WorldItemsPrefabEntries.FirstOrDefault(x => x.Id == model.TypeId.Value)
-                ?.Prefab;
+            PrefabEntry<WorldItemView> prefabEntry = null;
+            foreach (var x in _gameConfig.WorldItemsPrefabEntries)
+            {
+                if (x.Id == model.TypeId.Value)
+                {
+                    prefabEntry = x;
+                    break;
+                }
+            }
+
+            var prefab = prefabEntry?.Prefab;
             if (prefab == null)
             {
                 Debug.LogError($"missing prefab for id {model.TypeId.Value}");
@@ -70,7 +79,7 @@ namespace Game.Views.Environment.ResourceViews
             instance.Bind(model);
         }
 
-        private void Clear()
+        private void ClearWorldItemModelList()
         {
             foreach (var singleResourceView in _views)
             {

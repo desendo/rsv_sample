@@ -34,7 +34,7 @@ namespace Game.Controllers.Camera
 
             if (_cameraService.Rotating.Value)
             {
-                var rotationStep = (mousePosition.x - _prevMouseX) * dt * _gameConfig.RotationSpeed;
+                var rotationStep = (mousePosition.x - _prevMouseX) * dt * _gameConfig.CameraRotationSpeed;
                 var quaternionStep = Quaternion.AngleAxis(rotationStep, Vector3.up);
                 var offset = _cameraService.Position.Value - _heroService.Hero.Position.Value;
                 var rotatedOffset = quaternionStep * offset;

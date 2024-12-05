@@ -43,7 +43,7 @@ namespace Game.Views.UI
             if (itemView != null) _signalBus.Fire(new UIViewSignals.DropItemHeroStorageRequest(itemView.UId));
         }
 
-        private void HandleOnRemove(ItemModel obj)
+        private void HandleOnRemove(StorageItemModel obj)
         {
             var view = _views.FirstOrDefault(x => x.UId == obj.UId);
             if (view == null)
@@ -57,12 +57,12 @@ namespace Game.Views.UI
             Destroy(view.gameObject);
         }
 
-        private void HandleOnAdd(ItemModel model)
+        private void HandleOnAdd(StorageItemModel model)
         {
             AddNewView(model);
         }
 
-        private void AddNewView(ItemModel model)
+        private void AddNewView(StorageItemModel model)
         {
             var prefab = _gameConfig.BagItemViewPrefabEntries.FirstOrDefault(x => x.Id == model.TypeId.Value)?.Prefab;
             if (prefab == null)
@@ -77,7 +77,7 @@ namespace Game.Views.UI
             _views.Add(viewInstance);
         }
 
-        private void FillItems(List<ItemModel> items)
+        private void FillItems(List<StorageItemModel> items)
         {
             foreach (var model in items) AddNewView(model);
         }

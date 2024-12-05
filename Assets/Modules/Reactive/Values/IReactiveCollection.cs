@@ -8,12 +8,15 @@ namespace Modules.Reactive.Values
     {
         public enum EventType
         {
+            Undefined,
             Add,
             Remove,
             New,
             Clear,
             ChangeElement
         }
+        ReactiveEvent<ICollection<T>> OnAnyEvent { get; set; }
+
         ReactiveEvent<T> OnAdd { get; set; }
         ReactiveEvent OnClear { get; set; }
         ReactiveEvent<T> OnRemove { get; set; }

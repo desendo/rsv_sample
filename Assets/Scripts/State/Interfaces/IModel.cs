@@ -1,4 +1,3 @@
-using Game.State.Enum;
 using Modules.Reactive.Values;
 using UnityEngine;
 
@@ -18,7 +17,6 @@ namespace Game.State.Models
 
     public interface IJobModel : IModel
     {
-        JobEnum TargetJob { get; }
     }
 
     public interface ISelectableModel : IModel

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Game.State.Enum;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Game.State.Data
@@ -15,6 +13,7 @@ namespace Game.State.Data
         public List<ItemData> HeroStorageItems = new();
         public List<WorldResourceData> WorldResourcesData = new();
         public List<WorldItemData> WorldItemsData = new();
+        public HeroParametersData HeroParametersData = new();
 
         public static int GenerateUid()
         {
@@ -37,6 +36,7 @@ namespace Game.State.Data
 
         [HideInInspector] public int UId;
     }
+
     [Serializable]
     public class WorldItemData
     {
@@ -46,6 +46,7 @@ namespace Game.State.Data
         public bool Selected;
         [HideInInspector] public int UId;
     }
+
     [Serializable]
     public class HeroData
     {
@@ -54,12 +55,20 @@ namespace Game.State.Data
         public bool HasWayPoint;
         public Vector3 WayPoint;
         public bool Selected;
+        public JobData CurrentJob;
+        public string Speech;
+    }
 
-        public float MoveSpeed;
+    [Serializable]
+    public class HeroParametersData
+    {
+        public float Hunger;
         public float Stamina;
         public float StaminaMax;
-        public float StaminaRestorationSpeed;
-        public JobData CurrentJob;
+        public float HungerMax;
+        public float MaxMass;
+        public float MaxMoveSpeed;
+        public float MoveSpeedFactor;
     }
 
     [Serializable]
@@ -67,12 +76,12 @@ namespace Game.State.Data
     {
         public Vector3 Position;
         public Vector3 Rotation;
+        public Vector3 PositionShift;
     }
 
     [Serializable]
     public class JobData
     {
-        public JobEnum JobId;
         public int JobTargetUid;
     }
 
@@ -83,5 +92,6 @@ namespace Game.State.Data
         public string TypeId;
         public float ViewRotation;
         public Vector2 ViewPosition;
+        public float Mass;
     }
 }

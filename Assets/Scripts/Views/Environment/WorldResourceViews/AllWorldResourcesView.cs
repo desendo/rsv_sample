@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace Game.Views.Environment.ResourceViews
 {
-    public class AllResourcesView : MonoBehaviour
+    public class AllWorldResourcesView : MonoBehaviour
     {
-        private readonly List<WorldResourceView>
-            _views = new(); //сделано без пула. но если делать пул то он должен быть в этом классе
+        //todo pools
+        private readonly List<WorldResourceView> _views = new();
 
         private GameConfig _gameConfig;
         private WorldResourcesService _worldResourcesService;

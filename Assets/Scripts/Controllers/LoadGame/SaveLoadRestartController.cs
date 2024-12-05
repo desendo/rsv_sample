@@ -20,9 +20,11 @@ namespace Game.Controllers
         {
             signalBus.Subscribe<UIViewSignals.RestartGameRequest>(request =>
                 {
+                    //ресетим состояние, которое нужно ресетить (к примеру у них нет методов LoadData)
                     foreach (var resetService in resetServices)
                         resetService.Reset();
 
+                    //инициализируем состояние данными из сохранения
                     foreach (var service in loadServices)
                         service.LoadFrom(defaultStateContainer.Data);
                 }
@@ -30,6 +32,7 @@ namespace Game.Controllers
 
             signalBus.Subscribe<UIViewSignals.QuickLoadGameRequest>(request =>
                 {
+                    //вытаскиваем сохраненку через сервис, а если игрок до этого не сохранялся, то отменяем процедуру
                     var data = gameStateDataService.Load();
                     if (data == null)
                     {
@@ -47,10 +50,13 @@ namespace Game.Controllers
 
             signalBus.Subscribe<UIViewSignals.QuickSaveGameRequest>(request =>
                 {
+                    //создаем новый инстанс StateData
                     var data = new StateData();
+                    //прогоняем его по всем сервисам, каждый туда кладет что-то свое, чтобы сберечь) 
                     foreach (var service in saveServices)
                         service.SaveTo(data);
 
+                    //передаем наполненый StateData в надежные руки сервиса сохранения. он его положит в гипернадежные PlayerPrefs
                     gameStateDataService.Save(data);
                 }
             );

@@ -11,7 +11,6 @@ namespace Game.Controllers
         private readonly HeroService _heroService;
 
         public HandleActionRequestForHeroController(ISignalBus signalBus, HeroService heroService,
-            
             GameConfig gameConfig)
         {
             _gameConfig = gameConfig;
@@ -31,18 +30,15 @@ namespace Game.Controllers
                 return;
 
             var delta = worldModel.Position.Value - _heroService.Hero.Position.Value;
-            if (delta.magnitude > _gameConfig.InteractionDistance * 1.2f)
+            if (delta.magnitude > _gameConfig.HeroInteractionDistance)
             {
-                _heroService.Hero.Say(_gameConfig.Localization.GetJobTitle(jobModel.TargetJob));
-                
-                var wayPoint = -delta.normalized * _gameConfig.InteractionDistance + worldModel.Position.Value;
+                var wayPoint = -delta.normalized * _gameConfig.HeroInteractionDistance + worldModel.Position.Value;
                 _heroService.Hero.WayPoint.Value = wayPoint;
                 _heroService.Hero.HasWayPoint.Value = true;
             }
 
             _heroService.Hero.CurrentJob.Value = new HeroModel.Job
             {
-                JobId = jobModel.TargetJob,
                 JobTargetUid = jobModel.UId
             };
         }

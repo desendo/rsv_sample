@@ -29,7 +29,8 @@ namespace Game.Views.Environment.Items
             _model = null;
         }
 
-        //listen events and emit signals
+        //слушаем события на кнопки и отправляем сигналы. здесь передаем ссылку на модель,
+        //можно идентификатор как в другом месте. можно и ссылку как тут. но обязательно занулять _model в Dispose
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)

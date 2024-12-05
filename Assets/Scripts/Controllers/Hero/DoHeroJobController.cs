@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Services;
-using Game.State.Enum;
+using Game.State.Data;
 using Game.State.Models;
 using Modules.Common;
 using UnityEngine;
@@ -30,6 +30,7 @@ namespace Game.Controllers
         {
             if (_heroService.Hero.HasWayPoint.Value)
                 return;
+
             if (obj == null)
                 return;
 
@@ -38,6 +39,9 @@ namespace Game.Controllers
 
         private void PerformJob(HeroModel.Job job)
         {
+            if(job.JobTargetUid == 0)
+                return;
+
             IModel targetModel = null;
             foreach (var modelService in _modelServices)
             foreach (var model in modelService.GetList())
@@ -50,45 +54,49 @@ namespace Game.Controllers
                 _heroService.Hero.CurrentJob.Value = null;
                 return;
             }
-
-            if (job.JobId == JobEnum.PickResources)
+            //todo здесь можно добавить стратегию
+            if (targetModel is WorldResourceModel resourceModel)
             {
-                if (targetModel is WorldResourceModel resourceModel)
+                var itemNameTitle = _gameConfig.Localization.GetObjectProduct(resourceModel.TypeId.Value);
+                if (resourceModel.Count.Value > 0)
                 {
-                    var itemNameTitle = _gameConfig.Localization.GetObjectProduct(resourceModel.TypeId.Value);
-                    if (resourceModel.Count.Value > 0)
-                    {
-                        resourceModel.Count.Value--;
-                        _heroService.HeroStorage.AddItem(resourceModel.ItemType);
+                    resourceModel.Count.Value--;
+                    var item = new StorageItemModel
+                        {
+                            TypeId = { Value = resourceModel.ItemType },
+                            UId = StateData.GenerateUid(),
+                            Mass = { Value = _gameConfig.GetItemMass(resourceModel.TypeId.Value)},
+                            ViewPosition = { Value = new Vector2(Random.value  * 0.1f, 0)}
+                        };
 
-                        _heroService.Hero.Say($"{itemNameTitle} у меня");
-                    }
-                    else
-                    {
-                        _heroService.Hero.Say($"{itemNameTitle} тут кончилась");
-                    }
-                }
-                else
-                {
-                    Debug.LogError("model is not WorldResourceModel " + job.JobTargetUid);
-                }
-            }
-            if (job.JobId == JobEnum.PickItem)
-            {
-                if (targetModel is WorldItemModel itemModel)
-                {
-                    var itemNameTitle = _gameConfig.Localization.GetObjectProduct(itemModel.TypeId.Value);
-                    _worldItemsService.WorldItemModels.Remove(itemModel);
-                    _heroService.HeroStorage.AddItem(itemModel.TypeId.Value);
-
-                    _heroService.Hero.Say($"Поднял {itemNameTitle}");
+                    _heroService.Hero.Say($"Собрал {itemNameTitle}");
+                    _heroService.HeroStorage.Items.Add(item);
+                    _heroService.Hero.OnAction.Invoke();
 
                 }
                 else
                 {
-                    Debug.LogError("model is not WorldResourceModel " + job.JobTargetUid);
+                    _heroService.Hero.Say($"{itemNameTitle} тут кончилась");
                 }
             }
+
+            if (targetModel is WorldItemModel itemModel)
+            {
+                var itemNameTitle = _gameConfig.Localization.GetObjectProduct(itemModel.TypeId.Value);
+                _worldItemsService.WorldItemModels.Remove(itemModel);
+                var item = new StorageItemModel
+                {
+                    TypeId = { Value = itemModel.TypeId.Value },
+                    UId = StateData.GenerateUid(),
+                    Mass = { Value = _gameConfig.GetItemMass(itemModel.TypeId.Value)},
+                    ViewPosition = { Value = new Vector2(Random.value  * 0.1f, 0)}
+                };
+                _heroService.Hero.Say($"Поднял {itemNameTitle}");
+                _heroService.HeroStorage.Items.Add(item);
+
+                _heroService.Hero.OnAction.Invoke();
+            }
+
             _heroService.Hero.CurrentJob.Value = null;
         }
 

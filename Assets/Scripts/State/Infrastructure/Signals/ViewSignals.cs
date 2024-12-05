@@ -44,7 +44,15 @@ namespace Game.Signals
             public Vector3 Position { get; }
             public Quaternion Rotation { get; }
         }
+        public class ConsumeItemHeroStorageRequest
+        {
+            public ConsumeItemHeroStorageRequest(int uid)
+            {
+                Uid = uid;
+            }
 
+            public int Uid { get; }
+        }
         public class DropItemHeroStorageRequest
         {
             public DropItemHeroStorageRequest(int uid)

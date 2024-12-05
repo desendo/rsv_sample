@@ -22,7 +22,8 @@ namespace Game.Controllers
 
         private void HandleWayPointChanged(Vector3 obj)
         {
-            if (_heroService.Hero.HasWayPoint.Value) RotateToWayPoint();
+            if (_heroService.Hero.HasWayPoint.Value)
+                RotateToWayPoint();
         }
 
         private void HandleHeroHasWayPointChanged(bool hasWayPoint)
@@ -30,6 +31,8 @@ namespace Game.Controllers
             if (hasWayPoint)
             {
                 RotateToWayPoint();
+                //каждый апдейт мы проводим процедуру попытки перемещения героя
+                //причем этот апдейт крутится (и даже вызывается) только тогда когда нужно
                 _moveRoutine = _updateProvider.OnTick.Subscribe(MoveHeroRoutine);
             }
             else
@@ -47,6 +50,8 @@ namespace Game.Controllers
             _heroService.Hero.Rotation.Value = quaternion;
         }
 
+        //подобные вещи обычно выносятся в утилки,
+        //но здесь и далее максимум всего в контроллерах для наглядности и быстроты правки
         private void MoveHeroRoutine(float deltaTime)
         {
             var target = _heroService.Hero.WayPoint.Value;
@@ -54,12 +59,16 @@ namespace Game.Controllers
 
             var delta = target - self;
             var deltaMag = delta.magnitude;
-            if (deltaMag < 0.1f) _heroService.Hero.HasWayPoint.Value = false;
 
             var dir = delta / deltaMag;
 
-            var step = dir * (_heroService.Hero.MoveSpeed.Value * deltaTime);
-            _heroService.Hero.Position.Value += step;
+            var stepMag =  _heroService.HeroParameters.MaxMoveSpeed.Value * _heroService.HeroParameters.MoveSpeedFactor.Value * deltaTime;
+            var step = dir * stepMag;
+
+            if (deltaMag - stepMag < 0.1f)
+                _heroService.Hero.HasWayPoint.Value = false;
+            else
+                _heroService.Hero.Position.Value += step;
         }
     }
 }

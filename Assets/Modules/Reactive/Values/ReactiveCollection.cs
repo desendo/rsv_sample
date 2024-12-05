@@ -12,6 +12,7 @@ namespace Modules.Reactive.Values
         private readonly Dictionary<Action,Action> callbacks = new Dictionary<Action, Action>();
         public int Count => value.Count;
         public bool IsReadOnly => value.IsReadOnly;
+        public ReactiveEvent<ICollection<T>> OnAnyEvent { get; set; } = new ReactiveEvent<ICollection<T>>();
         public ReactiveEvent OnClear { get; set; } = new ReactiveEvent();
         public ReactiveEvent<T> OnAdd { get; set; } = new ReactiveEvent<T>();
         public ReactiveEvent<T> OnRemove { get; set; } = new ReactiveEvent<T>();
@@ -42,12 +43,15 @@ namespace Modules.Reactive.Values
         {
             value.Add(item);
             OnAdd.Invoke(item);
+            OnAnyEvent.Invoke(value);
         }
 
         public void Clear()
         {
             value.Clear();
             OnClear.Invoke();
+            OnAnyEvent.Invoke(value);
+
         }
 
         public bool Contains(T item)
@@ -63,8 +67,12 @@ namespace Modules.Reactive.Values
         public bool Remove(T item)
         {
             var result = value.Remove(item);
-            if(result)
+            if (result)
+            {
                 OnRemove.Invoke(item);
+                OnAnyEvent.Invoke(value);
+            }
+
             return result;
         }
 
@@ -96,6 +104,7 @@ namespace Modules.Reactive.Values
         {
             this.value = elements;
             OnNew.Invoke(this.value.ToList());
+            OnAnyEvent.Invoke(value);
         }
     }
 }

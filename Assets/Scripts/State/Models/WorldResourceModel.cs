@@ -1,5 +1,4 @@
-﻿using Game.State.Enum;
-using Modules.Reactive.Values;
+﻿using Modules.Reactive.Values;
 using UnityEngine;
 
 namespace Game.State.Models
@@ -10,7 +9,6 @@ namespace Game.State.Models
 
         public IReactiveVariable<int> Count { get; } = new ReactiveVariable<int>();
         public IReactiveVariable<int> Capacity { get; } = new ReactiveVariable<int>();
-        public JobEnum TargetJob => JobEnum.PickResources;
         public int UId { get; set; }
         public IReactiveVariable<string> TypeId { get; } = new ReactiveVariable<string>();
         public IReactiveVariable<bool> Selected { get; } = new ReactiveVariable<bool>();
