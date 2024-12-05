@@ -9,15 +9,19 @@ namespace Game.Controllers
         public CancelHeroJobController(HeroService heroService)
         {
             _heroService = heroService;
-            _heroService.Hero.HasWayPoint.Subscribe(OnWayPointAppear);
+            _heroService.Hero.WayPoint.Subscribe(x => OnWayPointChanged());
+            _heroService.Hero.HasWayPoint.Subscribe(x => OnWayPointAppearanceChanged());
         }
 
-        private void OnWayPointAppear(bool hasWayPoint)
+        private void OnWayPointChanged()
         {
-            if (!hasWayPoint)
-                return;
-
             _heroService.Hero.CurrentJob.Value = null;
+        }
+
+        private void OnWayPointAppearanceChanged()
+        {
+            if(!_heroService.Hero.HasWayPoint.Value)
+                _heroService.Hero.CurrentJob.Value = null;
         }
     }
 }
