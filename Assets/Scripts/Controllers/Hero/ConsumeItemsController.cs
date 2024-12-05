@@ -44,7 +44,7 @@ namespace Game.Controllers
                     {
                         if (effect.InstantEffectType == InstantEffectType.ReduceHunger)
                         {
-                            
+                            _heroService.HeroParameters.Hunger.Current.Value += effect.Value;
                         }
                     }
                 }

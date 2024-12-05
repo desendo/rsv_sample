@@ -34,28 +34,19 @@ MonoBehaviour:
       Prefab: {fileID: 1641113830296691516, guid: dec0815e3dfc6b247935f88aa90f2417, type: 3}
     - Id: twig
       Prefab: {fileID: -8201166034066850893, guid: d8f007d31d1dfec41ba7315e15d34a5a, type: 3}
-    ItemsWeights:
-    - Id: stone
-      Value: 5
-    - Id: berry
-      Value: 3
-    - Id: twig
-      Value: 2
-    - Id: mushroom
-      Value: 2
     ItemActionsResult:
     - Id: berry
       Value:
       - ActionType: 0
-        Effects:
-        - EffectType: 0
+        InstantEffects:
+        - InstantEffectType: 0
           Value: 5
     - Id: mushroom
       Value:
       - ActionType: 0
-        Effects:
-        - EffectType: 0
-          Value: 5
+        InstantEffects:
+        - InstantEffectType: 0
+          Value: 15
     ItemMasses:
     - Id: stone
       Value: 5
