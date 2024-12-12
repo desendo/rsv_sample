@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Game.Signals;
 using Game.State.Models;
-using Game.Views;
 using Modules.Common;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -34,19 +33,19 @@ namespace Game.Views.Environment.Items
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
-                Di.Instance.Get<ISignalBus>().Fire(new WorldViewSignals.SelectRequest(_model));
+                _signalBus.Fire(new WorldViewSignals.SelectRequest(_model));
             if (eventData.button == PointerEventData.InputButton.Right)
-                Di.Instance.Get<ISignalBus>().Fire(new WorldViewSignals.ActionRequest(_model));
+                _signalBus.Fire(new WorldViewSignals.ActionRequest(_model));
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Di.Instance.Get<ISignalBus>().Fire(new WorldViewSignals.HoverRequest(_model));
+            _signalBus.Fire(new WorldViewSignals.HoverRequest(_model));
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            Di.Instance.Get<ISignalBus>().Fire(new WorldViewSignals.UnHoverRequest(_model));
+            _signalBus.Fire(new WorldViewSignals.UnHoverRequest(_model));
         }
 
         public void Bind(WorldItemModel model)

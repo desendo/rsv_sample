@@ -8,17 +8,33 @@ namespace Game.State.Data
     [Serializable]
     public class StateData
     {
+        public SystemLanguage CurrentLanguage;
         public HeroData HeroData = new();
         public CameraData CameraData = new();
-        public List<ItemData> HeroStorageItems = new();
+        public StorageData HeroStorageItemsData = new();
         public List<WorldResourceData> WorldResourcesData = new();
         public List<WorldItemData> WorldItemsData = new();
         public HeroParametersData HeroParametersData = new();
+        public Map Map = new ();
+        public PhysicsData Physics = new PhysicsData();
 
         public static int GenerateUid()
         {
             return (int)(Random.value * int.MaxValue);
         }
+    }
+    [Serializable]
+    public class StorageData
+    {
+        public List<ItemData> Items = new();
+        public float Width;
+        public float Height;
+    }
+    [Serializable]
+    public class PhysicsData
+    {
+        public bool Is2dEnabled;
+        public float PhysicsGMultiplier;
     }
 
     [Serializable]
@@ -29,10 +45,8 @@ namespace Game.State.Data
         public Vector3 Position;
         public float Rotation;
         public bool Selected;
+        public IntegerFillData ResourcesData = new IntegerFillData();
 
-        public int Count;
-        public int Capacity;
-        public float Progress; //
 
         [HideInInspector] public int UId;
     }
@@ -57,6 +71,7 @@ namespace Game.State.Data
         public bool Selected;
         public JobData CurrentJob;
         public string Speech;
+        public bool InventoryShown;
     }
 
     [Serializable]
@@ -92,6 +107,11 @@ namespace Game.State.Data
         public string TypeId;
         public float ViewRotation;
         public Vector2 ViewPosition;
-        public float Mass;
+    }
+    [Serializable]
+    public class Map
+    {
+        public float CurrentDistance;
+        public bool Shown;
     }
 }

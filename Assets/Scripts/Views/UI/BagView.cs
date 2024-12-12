@@ -12,8 +12,14 @@ namespace Game.Views.UI
     public class BagView : MonoBehaviour
     {
         [SerializeField] private RectTransform _parent;
+        [SerializeField] private RectTransform _scaleHandler;
         [SerializeField] private GameObject _panel;
-        [SerializeField] private TriggerListener _triggerListener;
+        [SerializeField] private TriggerListener _triggerListener1;
+        [SerializeField] private TriggerListener _triggerListener2;
+
+        [SerializeField] private float _widthOffset;
+        [SerializeField] private float _heightOffset;
+        [SerializeField] private RectTransform _container;
         private readonly List<BagItemView> _views = new();
         private GameConfig _gameConfig;
         private StorageModel _heroStorage;
@@ -24,17 +30,29 @@ namespace Game.Views.UI
             _signalBus = Di.Instance.Get<SignalBus>();
             _gameConfig = Di.Instance.Get<GameConfig>();
 
-            Di.Instance.Get<HeroService>().Hero.Selected.Subscribe(selected => _panel.SetActive(selected));
+            Di.Instance.Get<UnitsService>().Hero.Selected.Subscribe(selected => _panel.SetActive(selected));
 
-            _heroStorage = Di.Instance.Get<HeroService>().HeroStorage;
+            var service = Di.Instance.Get<UnitsService>();
+            _heroStorage = service.HeroStorage;
 
             _heroStorage.Items.OnClear.Subscribe(HandleClear);
             _heroStorage.Items.OnAdd.Subscribe(HandleOnAdd);
             _heroStorage.Items.OnRemove.Subscribe(HandleOnRemove);
             _heroStorage.Items.OnNew.Subscribe(FillItems);
-            _triggerListener.Other.Subscribe(HandleTrigger);
 
-            FillItems(_heroStorage.Items.ToList());
+            _triggerListener1.Other.Subscribe(HandleTrigger);
+            _triggerListener2.Other.Subscribe(HandleTrigger);
+
+            _heroStorage.Width.Subscribe(x => UpdateContainerSize());
+            _heroStorage.Height.Subscribe(x => UpdateContainerSize());
+
+            service.Hero.InventoryShown.Subscribe(b => _scaleHandler.localScale = Vector3.one * (b ? _gameConfig.InventoryScale : 1));
+            FillItems(_heroStorage.Items);
+        }
+
+        private void UpdateContainerSize()
+        {
+            _container.sizeDelta = new Vector2(_heroStorage.Width.Value + _widthOffset, _heroStorage.Height.Value + _heightOffset);
         }
 
         private void HandleTrigger(Collider2D other)
@@ -77,7 +95,7 @@ namespace Game.Views.UI
             _views.Add(viewInstance);
         }
 
-        private void FillItems(List<StorageItemModel> items)
+        private void FillItems(ICollection<StorageItemModel> items)
         {
             foreach (var model in items) AddNewView(model);
         }

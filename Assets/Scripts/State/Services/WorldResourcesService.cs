@@ -7,12 +7,14 @@ using UnityEngine;
 namespace Game.Services
 {
     public class WorldResourcesService : ISaveData<StateData>, ILoadData<StateData>, IModelList<ISelectableModel>,
-        IModelList<IModel>
+        IModelList<IModel>, IModelList<IWorldModel>
     {
         private readonly List<IModel> _models = new();
+        private readonly List<IWorldModel> _worldModels = new();
         private readonly List<ISelectableModel> _selectableModels = new();
         List<IModel> IModelList<IModel>.GetList() => _models;
 
+        List<IWorldModel> IModelList<IWorldModel>.GetList() => _worldModels;
         List<ISelectableModel> IModelList<ISelectableModel>.GetList() => _selectableModels;
         public IReactiveCollection<WorldResourceModel> WorldResourceModels { get; } = new ReactiveCollection<WorldResourceModel>();
         public WorldResourcesService()
@@ -28,10 +30,11 @@ namespace Game.Services
                 model.TypeId.Value = itemData.TypeId;
                 model.Position.Value = itemData.Position;
                 model.Rotation.Value = Quaternion.Euler(0, itemData.Rotation, 0);
-                model.Count.Value = itemData.Count;
                 model.Selected.Value = itemData.Selected;
-                model.Capacity.Value = itemData.Capacity;
                 model.ItemType = itemData.ItemType;
+
+                model.Resources.DataToModel(itemData.ResourcesData, model.Resources);
+
                 model.UId = itemData.UId == 0 ? StateData.GenerateUid() : itemData.UId;
                 WorldResourceModels.Add(model);
             }
@@ -41,17 +44,20 @@ namespace Game.Services
         {
             data.WorldResourcesData.Clear();
             foreach (var model in WorldResourceModels)
-                data.WorldResourcesData.Add(new WorldResourceData
+            {
+                var item = new WorldResourceData
                 {
                     Position = model.Position.Value,
                     Rotation = model.Rotation.Value.eulerAngles.y,
                     TypeId = model.TypeId.Value,
-                    Count = model.Count.Value,
-                    Capacity = model.Capacity.Value,
+
                     Selected = model.Selected.Value,
                     ItemType = model.ItemType,
                     UId = model.UId
-                });
+                };
+                model.Resources.ModelToData(model.Resources, item.ResourcesData);
+                data.WorldResourcesData.Add(item);
+            }
         }
 
         private void OnCollectionChange(List<WorldResourceModel> result, IReactiveCollection<WorldResourceModel>.EventType eventType)
@@ -62,6 +68,7 @@ namespace Game.Services
                 {
                     _selectableModels.Add(model);
                     _models.Add(model);
+                    _worldModels.Add(model);
                 }
             }
             if (eventType == IReactiveCollection<WorldResourceModel>.EventType.Remove)
@@ -70,21 +77,25 @@ namespace Game.Services
                 {
                     _selectableModels.Remove(model);
                     _models.Remove(model);
+                    _worldModels.Remove(model);
                 }
             }
             if (eventType == IReactiveCollection<WorldResourceModel>.EventType.Clear)
             {
                 _selectableModels.Clear();
                 _models.Clear();
+                _worldModels.Clear();
             }
             if (eventType == IReactiveCollection<WorldResourceModel>.EventType.New)
             {
                 _selectableModels.Clear();
                 _models.Clear();
+                _worldModels.Clear();
                 foreach (var model in result)
                 {
                     _selectableModels.Add(model);
                     _models.Add(model);
+                    _worldModels.Add(model);
                 }
             }
         }

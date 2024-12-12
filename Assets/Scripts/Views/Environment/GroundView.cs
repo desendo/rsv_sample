@@ -17,7 +17,7 @@ namespace Game
         private void Awake()
         {
 
-            _hero = Di.Instance.Get<HeroService>().Hero;
+            _hero = Di.Instance.Get<UnitsService>().Hero;
             _hero.HasWayPoint.Subscribe(b => UpdateMarker());
             _hero.Selected.Subscribe(b => UpdateMarker());
             _hero.WayPoint.Subscribe(b => UpdateMarker());

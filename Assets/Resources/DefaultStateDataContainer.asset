@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DefaultStateDataContainer
   m_EditorClassIdentifier: 
   Data:
+    CurrentLanguage: 0
     HeroData:
       Position: {x: 0, y: 0, z: 0}
       Rotation: 0
@@ -26,25 +27,34 @@ MonoBehaviour:
       Position: {x: 1, y: 4, z: 5.5}
       Rotation: {x: 32, y: -165, z: 0}
       PositionShift: {x: 0, y: 0, z: 0}
-    HeroStorageItems: []
+    HeroStorageItemsData:
+      Items: []
+      Width: 70
+      Height: 110
     WorldResourcesData:
     - TypeId: berry_bush
       ItemType: berry
       Position: {x: -1.4, y: 0, z: -5.84}
       Rotation: -233.2
       Selected: 0
-      Count: 10
-      Capacity: 10
-      Progress: 0
+      ResourcesData:
+        Max: 20
+        Current: 5
+        Runtime: 0
+        CycleTime: 5
+        Started: 1
       UId: 0
     - TypeId: berry_bush
       ItemType: berry
       Position: {x: -5, y: 0, z: -7}
       Rotation: 12
       Selected: 0
-      Count: 10
-      Capacity: 10
-      Progress: 0
+      ResourcesData:
+        Max: 20
+        Current: 5
+        Runtime: 0
+        CycleTime: 5
+        Started: 1
       UId: 0
     WorldItemsData:
     - TypeId: mushroom
@@ -107,6 +117,12 @@ MonoBehaviour:
       Stamina: 0
       StaminaMax: 0
       HungerMax: 100
-      MaxMass: 15
+      MaxMass: 20
       MaxMoveSpeed: 2
       MoveSpeedFactor: 1
+    Map:
+      CurrentDistance: 30
+      Shown: 0
+    Physics:
+      Is2dEnabled: 1
+      PhysicsGMultiplier: 1

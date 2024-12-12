@@ -12,10 +12,6 @@ namespace Game.Services
         private readonly IReactiveVariable<bool> _paused = new ReactiveVariable<bool>();
         private readonly ReactiveEvent<float> _tick = new();
 
-        private void Awake()
-        {
-            Physics2D.simulationMode = SimulationMode2D.Script;
-        }
 
         private void Update()
         {
@@ -31,12 +27,14 @@ namespace Game.Services
             if (_paused.Value)
                 return;
 
-            Physics2D.Simulate(Time.fixedDeltaTime);
             _fixedTick.Invoke(Time.fixedDeltaTime);
         }
 
         private void LateUpdate()
         {
+            if (_paused.Value)
+                return;
+
             _lateTick.Invoke(Time.deltaTime);
         }
 

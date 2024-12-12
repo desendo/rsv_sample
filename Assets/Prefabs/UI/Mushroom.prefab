@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3871139449792217673}
   - component: {fileID: 2786475173830245671}
   - component: {fileID: 1576593247583077019}
-  - component: {fileID: 2593781667245151446}
+  - component: {fileID: 413396451370000072}
   m_Layer: 5
   m_Name: Mushroom
   m_TagString: Untagged
@@ -39,8 +39,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 20.52}
-  m_SizeDelta: {x: 30, y: 30}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6223279800790474210
 CanvasRenderer:
@@ -95,7 +95,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 30
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -152,10 +152,10 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -1.1}
-  m_Size: {x: 10.6, y: 28.08}
+  m_Offset: {x: -0.03, y: -0.03}
+  m_Size: {x: 0.24, y: 0.86}
   m_Direction: 0
---- !u!70 &2593781667245151446
+--- !u!70 &413396451370000072
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -187,8 +187,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 7.1}
-  m_Size: {x: 28.7, y: 12.05}
+  m_Offset: {x: 0, y: 0.25}
+  m_Size: {x: 0.83, y: 0.4}
   m_Direction: 1
 --- !u!1 &4429016177177339842
 GameObject:
@@ -222,10 +222,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5028702131568181537}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5062369170383669707
 CanvasRenderer:
@@ -247,8 +247,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.7019608}
+  m_Material: {fileID: 2100000, guid: 0a827ce76c0728b43aa8b13d2831acdd, type: 2}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.6745098}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

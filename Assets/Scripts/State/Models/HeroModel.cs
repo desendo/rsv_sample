@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.State.Models
 {
-    public class HeroModel : ISelectableModel, IModel
+    public class HeroModel : ISelectableModel, IModel, IWorldModel
     {
         public IReactiveVariable<string> Speech { get; } = new ReactiveVariable<string>();
 
@@ -16,6 +16,7 @@ namespace Game.State.Models
         public IReactiveVariable<Vector3> Position { get; } = new ReactiveVariable<Vector3>();
         public IReactiveVariable<Quaternion> Rotation { get; } = new ReactiveVariable<Quaternion>();
         public int UId => 1;
+        public IReactiveVariable<bool> InventoryShown { get; set; } = new ReactiveVariable<bool>();
 
         public IReactiveVariable<string> TypeId { get; } = new ReactiveVariable<string>("hero");
 

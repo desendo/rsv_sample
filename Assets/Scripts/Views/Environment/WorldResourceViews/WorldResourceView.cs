@@ -35,19 +35,19 @@ namespace Game
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
-                Di.Instance.Get<ISignalBus>().Fire(new WorldViewSignals.SelectRequest(_model));
+                _signalBus.Fire(new WorldViewSignals.SelectRequest(_model));
             if (eventData.button == PointerEventData.InputButton.Right)
-                Di.Instance.Get<ISignalBus>().Fire(new WorldViewSignals.ActionRequest(_model));
+                _signalBus.Fire(new WorldViewSignals.ActionRequest(_model));
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Di.Instance.Get<ISignalBus>().Fire(new WorldViewSignals.HoverRequest(_model));
+            _signalBus.Fire(new WorldViewSignals.HoverRequest(_model));
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            Di.Instance.Get<ISignalBus>().Fire(new WorldViewSignals.UnHoverRequest(_model));
+            _signalBus.Fire(new WorldViewSignals.UnHoverRequest(_model));
         }
 
         public void Bind(WorldResourceModel model)
@@ -57,7 +57,7 @@ namespace Game
             model.Rotation.Subscribe(x => transform.rotation = x).AddTo(_subscriptions);
             model.Selected.Subscribe(SetSelected).AddTo(_subscriptions);
             model.Hovered.Subscribe(SetHovered).AddTo(_subscriptions);
-            model.Count.Subscribe(x =>
+            model.Resources.Current.Subscribe(x =>
             {
                 foreach (var resourceCountMarker in _resourceCountMarkers) resourceCountMarker.SetActive(false);
                 for (var i = 0; i < x; i++)
@@ -65,7 +65,7 @@ namespace Game
                         _resourceCountMarkers[i].SetActive(true);
             }).AddTo(_subscriptions);
 
-            model.Capacity.Subscribe(x =>
+            model.Resources.Max.Subscribe(x =>
             {
                 if (_resourceCountMarkers.Count < x) Debug.LogWarning("недостаточно яблок на дубе");
             }).AddTo(_subscriptions);

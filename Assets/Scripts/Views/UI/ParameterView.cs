@@ -5,10 +5,17 @@ using Modules.Common;
 using Modules.Reactive.Values;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Game.Views.UI
 {
+    public class MultiStateView : MonoBehaviour
+    {
+        
+        
+    }
+
     public class ParameterView : MonoBehaviour, IDisposable
     {
         [SerializeField] private TextMeshProUGUI _title;

@@ -47,20 +47,24 @@ MonoBehaviour:
         InstantEffects:
         - InstantEffectType: 0
           Value: 15
-    ItemMasses:
+    ItemParameters:
     - Id: stone
-      Value: 5
+      Mass: 5
+      Size: 0.15
     - Id: berry
-      Value: 0.5
+      Mass: 0.2
+      Size: 0.1
     - Id: mushroom
-      Value: 2
+      Mass: 1
+      Size: 0.2
     - Id: twig
-      Value: 1
+      Mass: 1
+      Size: 0.4
     Localization:
       _objectTitleEntries:
       - Id: stone
-        Title: "\u043A\u0430\u043C\u0443\u0448\u0435\u043A"
-        Action: "\u041F\u043E\u0434\u043D\u044F\u0442\u044C \u043A\u0430\u043C\u0443\u0448\u0435\u043A"
+        Title: "\u043A\u0430\u043C\u0435\u043D\u044C"
+        Action: "\u041F\u043E\u0434\u043D\u044F\u0442\u044C \u043A\u0430\u043C\u0435\u043D\u044C"
         Description: "\u043C\u0430\u043B\u0435\u043D\u044C\u043A\u0438\u0439 \u043A\u0430\u043C\u0435\u043D\u044C
           (\u043D\u0443 3 \u043A\u0433 \u0433\u0434\u0435-\u0442\u043E), \u043A\u043E\u0442\u043E\u0440\u044B\u0439
           \u043B\u0435\u0436\u0438\u0442 \u0432 \u043B\u0435\u0441\u0443. \u041C\u043E\u0436\u043D\u043E
@@ -103,6 +107,27 @@ MonoBehaviour:
         Description: "\u0425\u043E\u0434\u0438\u043C \u043F\u043E \u043B\u0435\u0441\u0443,
           \u0438\u0449\u0435\u043C \u0440\u0435\u0441\u0443\u0440\u0441\u044B"
         Product: 
+      Languages:
+      - Id: 30
+        Strings:
+        - Id: berry
+          Value: "\u044F\u0433\u043E\u0434\u0430"
+        - Id: stone
+          Value: stone
+        - Id: HungerParameter
+          Value: "\u0433\u043E\u043B\u043E\u0434"
+        - Id: MassParameter
+          Value: "\u0433\u0440\u0443\u0437"
+      - Id: 10
+        Strings:
+        - Id: berry
+          Value: berry
+        - Id: stone
+          Value: stone
+        - Id: HungerParameter
+          Value: hunger
+        - Id: MassParameter
+          Value: load
     HeroInteractionDistance: 0.5
     SpeechBubbleTime: 1.5
     CameraZoomMinHeight: 2
@@ -115,3 +140,9 @@ MonoBehaviour:
     HintHideDelay: 1.5
     CameraFollowShiftGrowSpeed: 10
     CameraFollowShiftMagnitude: 5
+    InventoryScale: 5
+    MapDistanceMax: 120
+    MapDistanceStep: 5
+    MapDistanceMin: 5
+    MapResolution: 64
+    Gravity2d: -200

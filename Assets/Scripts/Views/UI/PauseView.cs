@@ -10,11 +10,13 @@ namespace Game
     {
         [SerializeField] private GameObject _pausedScreen;
         [SerializeField] private Button _pauseButton;
+        [SerializeField] private Button _playButton;
 
         private void Awake()
         {
             Di.Instance.Get<IUpdateProvider>().Paused.Subscribe(HandleIsPaused);
             _pauseButton.onClick.AddListener(() => Di.Instance.Get<ISignalBus>().Fire(new UIViewSignals.TogglePause()));
+            _playButton.onClick.AddListener(() => Di.Instance.Get<ISignalBus>().Fire(new UIViewSignals.TogglePause()));
         }
 
         private void Update()
@@ -25,6 +27,8 @@ namespace Game
 
         private void HandleIsPaused(bool isPaused)
         {
+            _pauseButton.gameObject.SetActive(!isPaused);
+            _playButton.gameObject.SetActive(isPaused);
             _pausedScreen.SetActive(isPaused);
         }
     }

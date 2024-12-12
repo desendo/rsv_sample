@@ -30,7 +30,15 @@ namespace Game.Signals
         public class TogglePause
         {
         }
+        public class SetLanguageRequest
+        {
+            public SystemLanguage Lang { get; }
 
+            public SetLanguageRequest(SystemLanguage lang)
+            {
+                this.Lang = lang;
+            }
+        }
         public class ActualizeBagItemPositionRequest
         {
             public ActualizeBagItemPositionRequest(int uid, Vector3 position, Quaternion rotation)
@@ -62,18 +70,59 @@ namespace Game.Signals
 
             public int Uid { get; }
         }
+
+        public struct ZoomMapRequest
+        {
+            public bool Plus { get; }
+
+            public ZoomMapRequest(bool plus)
+            {
+                this.Plus = plus;
+            }
+        }
+        public struct ToggleViewShownRequest<T>
+        {
+
+        }
+        public class HintRequest
+        {
+            public IModel Model { get; }
+
+            public HintRequest(IModel model)
+            {
+                this.Model = model;
+            }
+        }
+
+        public class UnHintRequest
+        {
+            public IModel model { get; }
+
+            public UnHintRequest(IModel model)
+            {
+                this.model = model;
+            }
+        }
+
+        public struct ToggleInventoryShownRequest
+        {
+        }
+
+        public struct ToggleMapShownRequest
+        {
+        }
     }
 
     public class WorldViewSignals
     {
         public struct SelectRequest
         {
-            public SelectRequest(ISelectableModel model)
+            public SelectRequest(IModel model)
             {
                 Model = model;
             }
 
-            public ISelectableModel Model { get; }
+            public IModel Model { get; }
         }
 
         public struct ActionRequest
@@ -88,22 +137,22 @@ namespace Game.Signals
 
         public struct HoverRequest
         {
-            public HoverRequest(ISelectableModel model)
+            public HoverRequest(IModel model)
             {
                 Model = model;
             }
 
-            public ISelectableModel Model { get; }
+            public IModel Model { get; }
         }
 
         public struct UnHoverRequest
         {
-            public UnHoverRequest(ISelectableModel model)
+            public UnHoverRequest(IModel model)
             {
                 Model = model;
             }
 
-            public ISelectableModel Model { get; }
+            public IModel Model { get; }
         }
 
         public struct GroundClick

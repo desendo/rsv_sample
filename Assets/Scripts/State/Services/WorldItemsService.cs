@@ -7,14 +7,16 @@ using UnityEngine;
 namespace Game.Services
 {
     public class WorldItemsService : ISaveData<StateData>, ILoadData<StateData>, IModelList<ISelectableModel>,
-        IModelList<IModel>
+        IModelList<IModel>, IModelList<IWorldModel>
     {
         private readonly List<IModel> _models = new();
+        private readonly List<IWorldModel> _worldModels = new();
         private readonly List<ISelectableModel> _selectableModels = new();
         List<IModel> IModelList<IModel>.GetList() => _models;
 
         List<ISelectableModel> IModelList<ISelectableModel>.GetList() => _selectableModels;
         public IReactiveCollection<WorldItemModel> WorldItemModels { get; } = new ReactiveCollection<WorldItemModel>();
+        List<IWorldModel> IModelList<IWorldModel>.GetList() => _worldModels;
 
         public WorldItemsService()
         {
@@ -58,6 +60,7 @@ namespace Game.Services
                 {
                     _selectableModels.Add(model);
                     _models.Add(model);
+                    _worldModels.Add(model);
                 }
             }
             if (eventType == IReactiveCollection<WorldItemModel>.EventType.Remove)
@@ -66,21 +69,25 @@ namespace Game.Services
                 {
                     _selectableModels.Remove(model);
                     _models.Remove(model);
+                    _worldModels.Remove(model);
                 }
             }
             if (eventType == IReactiveCollection<WorldItemModel>.EventType.Clear)
             {
                 _selectableModels.Clear();
                 _models.Clear();
+                _worldModels.Clear();
             }
             if (eventType == IReactiveCollection<WorldItemModel>.EventType.New)
             {
                 _selectableModels.Clear();
                 _models.Clear();
+                _worldModels.Clear();
                 foreach (var model in result)
                 {
                     _selectableModels.Add(model);
                     _models.Add(model);
+                    _worldModels.Add(model);
                 }
             }
         }
