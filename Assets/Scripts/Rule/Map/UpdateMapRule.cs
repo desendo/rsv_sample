@@ -9,20 +9,20 @@ namespace Game.Rules.Map
 {
     public class UpdateMapRule
     {
-        private readonly List<IModelList<IWorldModel>> _worldModelsLists;
+        private readonly List<IModelEnum<IWorldModel>> _worldModelsLists;
         private readonly MapService _mapService;
-        private readonly UnitsService _unitsService;
+        private readonly HeroService _heroService;
         private readonly GameConfig _gameConfig;
         private readonly CameraService _cameraService;
 
 
-        public UpdateMapRule(List<IModelList<IWorldModel>> worldModelsLists, IUpdateProvider updateProvider,
+        public UpdateMapRule(List<IModelEnum<IWorldModel>> worldModelsLists, IUpdateProvider updateProvider,
             SignalBus signalBus,
-            MapService mapService, UnitsService unitsService, GameConfig gameConfig, CameraService cameraService)
+            MapService mapService, HeroService heroService, GameConfig gameConfig, CameraService cameraService)
         {
             _worldModelsLists = worldModelsLists;
             _mapService = mapService;
-            _unitsService = unitsService;
+            _heroService = heroService;
             _gameConfig = gameConfig;
             _cameraService = cameraService;
             signalBus.Subscribe<UIViewSignals.ToggleMapShownRequest>(x =>
@@ -35,14 +35,14 @@ namespace Game.Rules.Map
         {
             _mapService.Pixels.Clear();
             var mapWidthPixels = _gameConfig.MapResolution;
-            var center = _unitsService.Hero.Position.Value;
+            var center = _heroService.Hero.Position.Value;
             var mapDistance = _mapService.MapDistance.Value;
             var mapShift = Vector3.one * ( mapDistance * 0.5f);
 
             var cameraPlaneRotation = ProjectRotationOnPlane(_cameraService.Rotation.Value, Vector3.up);
             foreach (var worldModelsList in _worldModelsLists)
             {
-                foreach (var worldModel in worldModelsList.GetList())
+                foreach (var worldModel in worldModelsList.GetEnum())
                 {
                     var delta = worldModel.Position.Value - center;
                     delta = cameraPlaneRotation * delta;

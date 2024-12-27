@@ -16,6 +16,7 @@ namespace Game
         public List<PrefabEntry<WorldItemView>> WorldItemsPrefabEntries;
         public List<PrefabEntry<BagItemView>> BagItemViewPrefabEntries;
         public List<StringId<List<Result>>> ItemActionsResult;
+        public DialogConfigAsset DialogConfigAsset;
         public List<MassSizeEntry> ItemParameters;
         [Header("Strings")]
         public Localization Localization;
@@ -39,6 +40,7 @@ namespace Game
         public float MapDistanceMin;
         public int MapResolution;
         public float Gravity2d = -10;
+        
 
         public MassSizeEntry GetItemParam(string id)
         {
@@ -49,6 +51,55 @@ namespace Game
 
             return null;
         }
+    }
+
+    [Serializable]
+    public class ChoiceNodeConfig
+    {
+        public int Id;
+        public string Value;
+        public List<int> Children;
+        public List<int> Parent;
+        public Rect Position;
+    }
+    [Serializable]
+    public class ConditionNodeConfig
+    {
+        public int Id;
+        public ConditionNodeType Type;
+        public string Value;
+        public List<int> Children;
+        public Rect Position;
+    }
+
+    public enum ConditionNodeType
+    {
+        None,
+        HasItemTypeId,
+    }
+
+    [Serializable]
+    public class DialogNodeConfig
+    {
+        public int Id;
+        public string Value;
+        public List<int> Children;
+        public List<int> Parent;
+        public Rect Position;
+    }
+    [Serializable]
+    public class DialogConfig
+    {
+        public string Id;
+        public List<DialogNodeConfig> DialogNodes = new List<DialogNodeConfig>();
+        public List<ConditionNodeConfig> ConditionNodes = new List<ConditionNodeConfig>();
+        public List<ChoiceNodeConfig> ChoiceNodes = new List<ChoiceNodeConfig>();
+
+    }
+    [Serializable]
+    public class DialogNodeAction
+    {
+        public string Id;
     }
 
     [Serializable]
@@ -77,6 +128,7 @@ namespace Game
         {
             return _objectTitleEntries.FirstOrDefault(x => x.Id == id)?.Title;
         }
+
 
 
         [Serializable]

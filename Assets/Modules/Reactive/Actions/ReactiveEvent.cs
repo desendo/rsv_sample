@@ -17,7 +17,7 @@ namespace Modules.Reactive.Actions
     }
     public interface IReactiveEvent<T1,T2> : IReadOnlyReactiveEvent<T1, T2>
     {
-        void Invoke((T1,T2) val);
+        void Invoke(T1 v1,T2 v2);
     }
     public interface IReadOnlyReactiveEvent<T>
     {
@@ -127,15 +127,6 @@ namespace Modules.Reactive.Actions
                 this.delegates.Remove(callback);
                 this.actions.Remove(action);
             }
-        }
-
-        public void Invoke((T1, T2) val)
-        {
-            foreach (var action in actions)
-            {
-                action.Invoke(val.Item1, val.Item2);
-            }
-
         }
     }
 }

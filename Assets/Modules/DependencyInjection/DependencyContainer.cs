@@ -19,7 +19,7 @@ namespace Modules.DependencyInjection
         }
 
         /// <summary>
-        /// Creates new and return instance, whithout injecting
+        /// Creates new and return instance, whithout injecting, adds to container
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -58,7 +58,7 @@ namespace Modules.DependencyInjection
         }
 
         /// <summary>
-        /// Add and return instance, injecting its deps
+        /// Add and return instance, injecting its deps, adds to container
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -92,7 +92,7 @@ namespace Modules.DependencyInjection
             return (T)instance;
         }
         /// <summary>
-        /// Creates and return instance, injecting its deps
+        /// Creates and return instance, injecting its deps, does not add to container
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -134,19 +134,19 @@ namespace Modules.DependencyInjection
             return (T)this.cache.Get(typeof(T));
         }
 
-        public object GetList(Type type)
+        internal object All(Type type)
         {
-            return this.cache.GetList(type);
+            return this.cache.All(type);
         }
 
-        public List<T> GetList<T>()
+        public List<T> All<T>()
         {
-            if (this.cache.GetList(typeof(T)) == null)
+            if (this.cache.All(typeof(T)) == null)
             {
                 return null;
             }
 
-            var cached = ((List<T>)this.cache.GetList(typeof(T)));
+            var cached = ((List<T>)this.cache.All(typeof(T)));
             var list = cached.ToList();
             return list;
         }
@@ -254,7 +254,7 @@ namespace Modules.DependencyInjection
                 return null;
             }
 
-            public object GetList(Type type)
+            internal object All(Type type)
             {
                 if (this.objectsByInterfaces.TryGetValue(type, out var list))
                 {

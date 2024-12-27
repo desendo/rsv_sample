@@ -1,31 +1,22 @@
 ﻿using System.Collections.Generic;
+using Game.Services.ServicesBase;
 using Game.State.Data;
 using Game.State.Models;
-using Modules.Reactive.Values;
 using UnityEngine;
 
 namespace Game.Services
 {
-    public class WorldItemsService : ISaveData<StateData>, ILoadData<StateData>, IModelList<ISelectableModel>,
-        IModelList<IModel>, IModelList<IWorldModel>
+    public class WorldItemsService : InventoryServiceBase<WorldItemModel>, ISaveLoadData<StateData>,
+         IModelEnum<ISelectableModel>, IModelEnum<IModel>, IModelEnum<IWorldModel>, IModelEnum<IInteractionModel>
     {
-        private readonly List<IModel> _models = new();
-        private readonly List<IWorldModel> _worldModels = new();
-        private readonly List<ISelectableModel> _selectableModels = new();
-        List<IModel> IModelList<IModel>.GetList() => _models;
-
-        List<ISelectableModel> IModelList<ISelectableModel>.GetList() => _selectableModels;
-        public IReactiveCollection<WorldItemModel> WorldItemModels { get; } = new ReactiveCollection<WorldItemModel>();
-        List<IWorldModel> IModelList<IWorldModel>.GetList() => _worldModels;
-
-        public WorldItemsService()
-        {
-            WorldItemModels.Subscribe(OnCollectionChange);
-        }
+        IEnumerable<IModel> IModelEnum<IModel>.GetEnum() => GetByInterface<IModel>();
+        IEnumerable<IInteractionModel> IModelEnum<IInteractionModel>.GetEnum() => GetByInterface<IInteractionModel>();
+        IEnumerable<IWorldModel> IModelEnum<IWorldModel>.GetEnum() => GetByInterface<IWorldModel>();
+        IEnumerable<ISelectableModel> IModelEnum<ISelectableModel>.GetEnum() => GetByInterface<ISelectableModel>();
 
         public void LoadFrom(in StateData data)
         {
-            WorldItemModels.Clear();
+            Clear();
             foreach (var itemData in data.WorldItemsData)
             {
                 var model = new WorldItemModel();
@@ -34,14 +25,14 @@ namespace Game.Services
                 model.Rotation.Value = Quaternion.Euler(0, itemData.Rotation, 0);
                 model.Selected.Value = itemData.Selected;
                 model.UId = itemData.UId == 0 ? StateData.GenerateUid() : itemData.UId;
-                WorldItemModels.Add(model);
+                Add(model);
             }
         }
 
         public void SaveTo(StateData data)
         {
             data.WorldItemsData.Clear();
-            foreach (var model in WorldItemModels)
+            foreach (var model in this)
                 data.WorldItemsData.Add(new WorldItemData()
                 {
                     Position = model.Position.Value,
@@ -52,44 +43,5 @@ namespace Game.Services
                 });
         }
 
-        private void OnCollectionChange(List<WorldItemModel> result, IReactiveCollection<WorldItemModel>.EventType eventType)
-        {
-            if (eventType == IReactiveCollection<WorldItemModel>.EventType.Add)
-            {
-                foreach (var model in result)
-                {
-                    _selectableModels.Add(model);
-                    _models.Add(model);
-                    _worldModels.Add(model);
-                }
-            }
-            if (eventType == IReactiveCollection<WorldItemModel>.EventType.Remove)
-            {
-                foreach (var model in result)
-                {
-                    _selectableModels.Remove(model);
-                    _models.Remove(model);
-                    _worldModels.Remove(model);
-                }
-            }
-            if (eventType == IReactiveCollection<WorldItemModel>.EventType.Clear)
-            {
-                _selectableModels.Clear();
-                _models.Clear();
-                _worldModels.Clear();
-            }
-            if (eventType == IReactiveCollection<WorldItemModel>.EventType.New)
-            {
-                _selectableModels.Clear();
-                _models.Clear();
-                _worldModels.Clear();
-                foreach (var model in result)
-                {
-                    _selectableModels.Add(model);
-                    _models.Add(model);
-                    _worldModels.Add(model);
-                }
-            }
-        }
     }
 }

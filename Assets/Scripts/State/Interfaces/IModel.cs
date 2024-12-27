@@ -15,7 +15,7 @@ namespace Game.State.Models
         public IReactiveVariable<Quaternion> Rotation { get; }
     }
 
-    public interface IJobModel : IModel
+    public interface IInteractionModel : IModel
     {
     }
 

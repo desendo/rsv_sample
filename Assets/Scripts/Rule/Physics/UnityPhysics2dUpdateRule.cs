@@ -9,14 +9,14 @@ namespace Game.Rule.Physics
         private readonly PhysicsService _physicsService;
 
         public UnityPhysics2dUpdateRule(IUpdateProvider updateProvider, GameConfig gameConfig,
-            PhysicsService physicsService, UnitsService unitsService)
+            PhysicsService physicsService, HeroService heroService)
         {
             _gameConfig = gameConfig;
             _physicsService = physicsService;
             updateProvider.OnFixedTick.Subscribe(Fixed);
             _physicsService.PhysicsGMultiplier.Subscribe(x=>UpdateGravity());
             _physicsService.PhysicsGBase.Subscribe(x=>UpdateGravity());
-            unitsService.Hero.InventoryShown.Subscribe(OnInventoryShown);
+            heroService.Hero.InventoryShown.Subscribe(OnInventoryShown);
 
         }
 

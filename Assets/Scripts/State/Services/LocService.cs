@@ -33,6 +33,12 @@ namespace Game.Services
 
         public static IReactiveVariable<string> ById(string id)
         {
+            if (id == null)
+            {
+                Debug.LogWarning("null loc id");
+                return null;
+            }
+
             if (!_strings.TryGetValue(id, out var reactiveVariable))
             {
                 reactiveVariable = new ReactiveVariable<string>(string.Concat(CurrentLanguage.Value.ToString(),"_",id));

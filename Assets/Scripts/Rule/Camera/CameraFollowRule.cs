@@ -9,18 +9,18 @@ namespace Game.Rules.Camera
         private readonly CameraService _cameraService;
         private readonly GameConfig _gameConfig;
         private readonly IUpdateProvider _updateProvider;
-        private readonly UnitsService _unitsService;
+        private readonly HeroService _heroService;
         private IDisposable _updateFollowShiftRoutine;
 
 
         public CameraFollowRule(CameraService cameraService, GameConfig gameConfig,
-            IUpdateProvider updateProvider, UnitsService unitsService)
+            IUpdateProvider updateProvider, HeroService heroService)
         {
             _cameraService = cameraService;
             _gameConfig = gameConfig;
             _updateProvider = updateProvider;
-            _unitsService = unitsService;
-            _unitsService.Hero.HasWayPoint.Subscribe(HandleHeroIsMoving);
+            _heroService = heroService;
+            _heroService.Hero.HasWayPoint.Subscribe(HandleHeroIsMoving);
             updateProvider.OnTick.Subscribe(Update);
         }
 
@@ -40,16 +40,16 @@ namespace Game.Rules.Camera
 
         private void UpdateFollowShiftRoutine(float dt)
         {
-            var dir = (_unitsService.Hero.WayPoint.Value - _unitsService.Hero.Position.Value).normalized;
+            var dir = (_heroService.Hero.WayPoint.Value - _heroService.Hero.Position.Value).normalized;
             _cameraService.PositionShift.Value = Vector3.Lerp(_cameraService.PositionShift.Value, dir * _gameConfig.CameraFollowShiftMagnitude, _gameConfig.CameraFollowShiftGrowSpeed * dt);
         }
 
         private void Update(float dt)
         {
-            if(!_unitsService.Hero.Selected.Value)
+            if(!_heroService.Hero.Selected.Value)
                 return;
 
-            var followPoint = _cameraService.PositionShift.Value + _unitsService.Hero.Position.Value;
+            var followPoint = _cameraService.PositionShift.Value + _heroService.Hero.Position.Value;
             var ray = _cameraService.Camera.Value.ViewportPointToRay(Vector2.one * 0.5f);
 
             var planeDifference = Vector3.zero;

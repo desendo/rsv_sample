@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.State.Models
 {
-    public class WorldItemModel : ISelectableModel, IWorldModel, IJobModel
+    public class WorldItemModel : ISelectableModel, IWorldModel, IInteractionModel
     {
         public IReactiveVariable<string> TypeId { get; } = new ReactiveVariable<string>();
         public int UId { get; set; }

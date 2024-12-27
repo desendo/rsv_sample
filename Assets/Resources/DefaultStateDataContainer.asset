@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultStateDataContainer
   m_EditorClassIdentifier: 
   Data:
-    CurrentLanguage: 0
+    CurrentLanguage: 30
     HeroData:
       Position: {x: 0, y: 0, z: 0}
       Rotation: 0
@@ -23,6 +23,7 @@ MonoBehaviour:
       CurrentJob:
         JobTargetUid: 0
       Speech: 
+      InventoryShown: 0
     CameraData:
       Position: {x: 1, y: 4, z: 5.5}
       Rotation: {x: 32, y: -165, z: 0}
@@ -114,8 +115,6 @@ MonoBehaviour:
       UId: 0
     HeroParametersData:
       Hunger: 50
-      Stamina: 0
-      StaminaMax: 0
       HungerMax: 100
       MaxMass: 20
       MaxMoveSpeed: 2

@@ -14,18 +14,18 @@ namespace Game.Rules
         private readonly GameConfig _gameConfig;
         private readonly IUpdateProvider _updateProvider;
         private readonly CameraService _cameraService;
-        private readonly UnitsService _unitsService;
+        private readonly HeroService _heroService;
         private readonly HintService _hintService;
-        private readonly List<IModelList<ISelectableModel>> _selectableServices;
+        private readonly List<IModelEnum<ISelectableModel>> _selectableServices;
         private IDisposable _hintDelayProcedure;
 
 
         public HoverAndHintWorldViewsRule(ISignalBus signalBus, CameraService cameraService,
-            UnitsService unitsService, GameConfig gameConfig, IUpdateProvider updateProvider,
-            List<IModelList<ISelectableModel>> selectableServices, HintService hintService)
+            HeroService heroService, GameConfig gameConfig, IUpdateProvider updateProvider,
+            List<IModelEnum<ISelectableModel>> selectableServices, HintService hintService)
         {
             _cameraService = cameraService;
-            _unitsService = unitsService;
+            _heroService = heroService;
             _gameConfig = gameConfig;
             _updateProvider = updateProvider;
             _selectableServices = selectableServices;
@@ -97,7 +97,7 @@ namespace Game.Rules
                 }
                 if (model is WorldItemModel worldItemModel)
                 {
-                    if (_unitsService.Hero.Selected.Value)
+                    if (_heroService.Hero.Selected.Value)
                     {
                         hintText = _gameConfig.Localization.GetObjectAction(model.TypeId.Value);
                         hintHeaderText = "Пкм";
@@ -151,7 +151,7 @@ namespace Game.Rules
         private void DeselectAll()
         {
             foreach (var selectableService in _selectableServices)
-            foreach (var selectableModel in selectableService.GetList())
+            foreach (var selectableModel in selectableService.GetEnum())
                 selectableModel.Selected.Value = false;
         }
     }

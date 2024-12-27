@@ -93,7 +93,7 @@ namespace Game.State.Models
         }
 
 
-        public void DataToModel(in IntegerFillData data,in IntegerFillModel model)
+        public void DataToModel(in IntegerFillData data, in IntegerFillModel model)
         {
             model.Max.Value = data.Max;
             model.Current.Value = data.Current;

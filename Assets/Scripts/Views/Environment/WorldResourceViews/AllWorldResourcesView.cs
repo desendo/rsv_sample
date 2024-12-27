@@ -19,11 +19,11 @@ namespace Game.Views.Environment.ResourceViews
             _gameConfig = Di.Instance.Get<GameConfig>();
             _worldResourcesService = Di.Instance.Get<WorldResourcesService>();
 
-            HandleNewResourcesList(_worldResourcesService.WorldResourceModels.ToList());
-            _worldResourcesService.WorldResourceModels.OnNew.Subscribe(HandleNewResourcesList);
-            _worldResourcesService.WorldResourceModels.OnClear.Subscribe(Clear);
-            _worldResourcesService.WorldResourceModels.OnAdd.Subscribe(HandleNewResourceModelAdd);
-            _worldResourcesService.WorldResourceModels.OnRemove.Subscribe(HandleNewResourceModelRemove);
+            HandleNewResourcesList(_worldResourcesService);
+            _worldResourcesService.OnNew.Subscribe(HandleNewResourcesList);
+            _worldResourcesService.OnClear.Subscribe(Clear);
+            _worldResourcesService.OnAdd.Subscribe(HandleNewResourceModelAdd);
+            _worldResourcesService.OnRemove.Subscribe(HandleNewResourceModelRemove);
         }
 
         private void HandleNewResourceModelRemove(WorldResourceModel obj)
@@ -41,7 +41,7 @@ namespace Game.Views.Environment.ResourceViews
             AddSingleView(obj);
         }
 
-        private void HandleNewResourcesList(List<WorldResourceModel> obj)
+        private void HandleNewResourcesList(IEnumerable<WorldResourceModel> obj)
         {
             Clear();
             foreach (var resourceModel in obj) AddSingleView(resourceModel);

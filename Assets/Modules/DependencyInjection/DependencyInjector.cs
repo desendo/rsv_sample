@@ -32,7 +32,7 @@ namespace Modules.DependencyInjection
                     if (arg == null)
                     {
                         var itemType = type.GetGenericArguments().Single();
-                        var cachedObjectsList = this.container.GetList(itemType) as List<object>;
+                        var cachedObjectsList = this.container.All(itemType) as List<object>;
                         var genericListType = typeof(List<>).MakeGenericType(new Type[] { itemType });
                         var genericListInstance = (IList)Activator.CreateInstance(genericListType);
 

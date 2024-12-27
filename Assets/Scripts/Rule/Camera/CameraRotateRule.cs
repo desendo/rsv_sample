@@ -9,14 +9,14 @@ namespace Game.Rules.Camera
     {
         private readonly CameraService _cameraService;
         private readonly GameConfig _gameConfig;
-        private readonly UnitsService _unitsService;
+        private readonly HeroService _heroService;
 
         public CameraRotateRule(CameraService cameraService, GameConfig gameConfig,
-            IUpdateProvider updateProvider, UnitsService unitsService)
+            IUpdateProvider updateProvider, HeroService heroService)
         {
             _cameraService = cameraService;
             _gameConfig = gameConfig;
-            _unitsService = unitsService;
+            _heroService = heroService;
 
             updateProvider.OnTick.Subscribe(Update);
         }
@@ -24,7 +24,7 @@ namespace Game.Rules.Camera
         private float _prevMouseX;
         private void Update(float dt)
         {
-            if(!_unitsService.Hero.Selected.Value)
+            if(!_heroService.Hero.Selected.Value)
                 return;
 
             if (GetMouseButtonDown(2))
@@ -36,9 +36,9 @@ namespace Game.Rules.Camera
             {
                 var rotationStep = (mousePosition.x - _prevMouseX) * dt * _gameConfig.CameraRotationSpeed;
                 var quaternionStep = Quaternion.AngleAxis(rotationStep, Vector3.up);
-                var offset = _cameraService.Position.Value - _unitsService.Hero.Position.Value;
+                var offset = _cameraService.Position.Value - _heroService.Hero.Position.Value;
                 var rotatedOffset = quaternionStep * offset;
-                _cameraService.Position.Value = _unitsService.Hero.Position.Value + rotatedOffset;
+                _cameraService.Position.Value = _heroService.Hero.Position.Value + rotatedOffset;
                 _cameraService.Rotation.Value = quaternionStep * _cameraService.Rotation.Value;
             }
             if (GetMouseButtonUp(2))

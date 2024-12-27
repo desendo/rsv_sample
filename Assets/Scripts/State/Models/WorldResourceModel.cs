@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.State.Models
 {
-    public class WorldResourceModel : ISelectableModel, IWorldModel, IJobModel
+    public class WorldResourceModel : ISelectableModel, IWorldModel, IInteractionModel
     {
         public string ItemType { get; set; }
 

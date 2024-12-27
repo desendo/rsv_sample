@@ -8,12 +8,12 @@ namespace Game.Rules
 {
     public class SetHeroMoveWayPointByGroundClickRule
     {
-        private readonly UnitsService _unitsService;
+        private readonly HeroService _heroService;
         private IDisposable _moveRoutine;
 
-        public SetHeroMoveWayPointByGroundClickRule(ISignalBus signalBus, UnitsService unitsService)
+        public SetHeroMoveWayPointByGroundClickRule(ISignalBus signalBus, HeroService heroService)
         {
-            _unitsService = unitsService;
+            _heroService = heroService;
             signalBus.Subscribe<WorldViewSignals.GroundClick>(HandleGroundClick);
         }
 
@@ -22,11 +22,11 @@ namespace Game.Rules
             if (obj.Button != PointerEventData.InputButton.Right)
                 return;
 
-            if (!_unitsService.Hero.Selected.Value)
+            if (!_heroService.Hero.Selected.Value)
                 return;
 
-            _unitsService.Hero.WayPoint.Value = obj.Position;
-            _unitsService.Hero.HasWayPoint.Value = true;
+            _heroService.Hero.WayPoint.Value = obj.Position;
+            _heroService.Hero.HasWayPoint.Value = true;
         }
     }
 }

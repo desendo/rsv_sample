@@ -32,7 +32,7 @@ namespace Game.Rules
 
             signalBus.Subscribe<UIViewSignals.QuickLoadGameRequest>(request =>
                 {
-                    //вытаскиваем сохраненку через сервис, а если игрок до этого не сохранялся, то отменяем процедуру
+                    //вытаскиваем сохраненку через сервис, а если игрок до этого не сохранялся (сохраненка пустая), то отменяем процедуру
                     var data = gameStateDataService.Load();
                     if (data == null)
                     {

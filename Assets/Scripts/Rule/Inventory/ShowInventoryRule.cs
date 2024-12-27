@@ -6,11 +6,11 @@ namespace Game.Rule.Inventory
 {
     public class ShowInventoryRule
     {
-        private readonly UnitsService _unitsService;
+        private readonly HeroService _heroService;
 
-        public ShowInventoryRule(SignalBus signalBus, UnitsService unitsService)
+        public ShowInventoryRule(SignalBus signalBus, HeroService heroService)
         {
-            _unitsService = unitsService;
+            _heroService = heroService;
             signalBus.Subscribe<UIViewSignals.ToggleInventoryShownRequest>(HandleToggleInventoryRequest);
         
         }
@@ -19,7 +19,7 @@ namespace Game.Rule.Inventory
 
         private void HandleToggleInventoryRequest(UIViewSignals.ToggleInventoryShownRequest obj)
         {
-            _unitsService.Hero.InventoryShown.Value = !_unitsService.Hero.InventoryShown.Value;
+            _heroService.Hero.InventoryShown.Value = !_heroService.Hero.InventoryShown.Value;
         }
     }
 }

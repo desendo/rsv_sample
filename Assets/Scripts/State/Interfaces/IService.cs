@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Game.State.Models
 {
@@ -14,9 +15,9 @@ namespace Game.State.Models
         void LoadFrom(in T data);
     }
 
-    public interface IModelList<T>
+    public interface IModelEnum<T>
     {
-        List<T> GetList();
+        IEnumerable<T> GetEnum();
     }
 
     public interface IReset

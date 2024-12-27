@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d27d8b60828b8c94f873f1815fd25f78, type: 3}
+  m_Name: Dialog config
+  m_EditorClassIdentifier: 
+  DialogConfigs:
+  - Id: trader_ dialog
+    DialogNodes:
+    - Id: 0
+      Value: 
+      Children: 
+      Parent: 
+      Position:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 0
+        height: 0
+    - Id: 0
+      Value: 
+      Children: 
+      Parent: 
+      Position:
+        serializedVersion: 2
+        x: 200
+        y: 200
+        width: 200
+        height: 134
+    ConditionNodes: []
+    ChoiceNodes:
+    - Id: 1
+      Value: 
+      Children: 
+      Parent: 
+      Position:
+        serializedVersion: 2
+        x: 497
+        y: 152
+        width: 200
+        height: 158
+  Actions:
+  - Id: 
+  - Id: exit
+  - Id: start_trade

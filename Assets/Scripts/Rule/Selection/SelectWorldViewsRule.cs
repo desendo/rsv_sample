@@ -11,11 +11,11 @@ namespace Game.Rules
     public class SelectWorldViewsRule
     {
 
-        private readonly List<IModelList<ISelectableModel>> _selectableServices;
+        private readonly List<IModelEnum<ISelectableModel>> _selectableServices;
         private IDisposable _hintDelayProcedure;
 
 
-        public SelectWorldViewsRule(ISignalBus signalBus, List<IModelList<ISelectableModel>> selectableServices)
+        public SelectWorldViewsRule(ISignalBus signalBus, List<IModelEnum<ISelectableModel>> selectableServices)
         {
             _selectableServices = selectableServices;
             signalBus.Subscribe<WorldViewSignals.GroundClick>(HandleGroundClick);
@@ -40,7 +40,7 @@ namespace Game.Rules
         private void DeselectAll()
         {
             foreach (var selectableService in _selectableServices)
-            foreach (var selectableModel in selectableService.GetList())
+            foreach (var selectableModel in selectableService.GetEnum())
                 selectableModel.Selected.Value = false;
         }
     }

@@ -6,17 +6,17 @@ namespace Game.Rules.UI
 {
     public class ActualizeBagItemsRule
     {
-        private readonly UnitsService _unitsService;
+        private readonly HeroService _heroService;
 
-        public ActualizeBagItemsRule(ISignalBus signalBus, UnitsService unitsService)
+        public ActualizeBagItemsRule(ISignalBus signalBus, HeroService heroService)
         {
-            _unitsService = unitsService;
+            _heroService = heroService;
             signalBus.Subscribe<UIViewSignals.ActualizeBagItemPositionRequest>(HandleActualizeBagItemPositionRequest);
         }
 
         private void HandleActualizeBagItemPositionRequest(UIViewSignals.ActualizeBagItemPositionRequest obj)
         {
-            foreach (var model in _unitsService.HeroStorage.Items)
+            foreach (var model in _heroService.HeroStorage.Items)
                 if (obj.Uid == model.UId)
                 {
                     model.ViewPosition.Value = obj.Position;

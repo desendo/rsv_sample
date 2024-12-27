@@ -16,7 +16,7 @@ namespace Game.Rule.World
 
         private void Callback(float obj)
         {
-            foreach (var worldResourceModel in _worldResourcesService.WorldResourceModels)
+            foreach (var worldResourceModel in _worldResourcesService)
             {
                 worldResourceModel.Resources.Update(obj);
             }

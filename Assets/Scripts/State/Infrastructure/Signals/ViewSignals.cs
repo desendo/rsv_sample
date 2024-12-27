@@ -26,7 +26,9 @@ namespace Game.Signals
         public struct RestartGameRequest
         {
         }
-
+        public class CancelDialogRequest
+        {
+        }
         public class TogglePause
         {
         }
@@ -110,6 +112,16 @@ namespace Game.Signals
 
         public struct ToggleMapShownRequest
         {
+        }
+
+        public class DialogOptionRequest
+        {
+            public int Index { get; }
+
+            public DialogOptionRequest(int index)
+            {
+                Index = index;
+            }
         }
     }
 

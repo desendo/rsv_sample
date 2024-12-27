@@ -24,13 +24,13 @@ namespace Game.Views.Hero
         private void Awake()
         {
             //binding to data
-            _model = Di.Instance.Get<UnitsService>().Hero;
-            Di.Instance.Get<UnitsService>().Hero.Hovered.Subscribe(SetHovered);
-            Di.Instance.Get<UnitsService>().Hero.Selected.Subscribe(SetSelected);
-            Di.Instance.Get<UnitsService>().Hero.Rotation.Subscribe(SetRotation);
-            Di.Instance.Get<UnitsService>().Hero.Position.Subscribe(SetPosition);
-            Di.Instance.Get<UnitsService>().Hero.HasWayPoint.Subscribe(HandleHasWayPoint);
-            Di.Instance.Get<UnitsService>().Hero.OnAction.Subscribe(StartActionAnimation);
+            _model = Di.Instance.Get<HeroService>().Hero;
+            Di.Instance.Get<HeroService>().Hero.Hovered.Subscribe(SetHovered);
+            Di.Instance.Get<HeroService>().Hero.Selected.Subscribe(SetSelected);
+            Di.Instance.Get<HeroService>().Hero.Rotation.Subscribe(SetRotation);
+            Di.Instance.Get<HeroService>().Hero.Position.Subscribe(SetPosition);
+            Di.Instance.Get<HeroService>().Hero.HasWayPoint.Subscribe(HandleHasWayPoint);
+            Di.Instance.Get<HeroService>().Hero.OnAction.Subscribe(StartActionAnimation);
         }
 
 

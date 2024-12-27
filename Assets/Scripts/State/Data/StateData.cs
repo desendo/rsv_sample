@@ -15,13 +15,20 @@ namespace Game.State.Data
         public List<WorldResourceData> WorldResourcesData = new();
         public List<WorldItemData> WorldItemsData = new();
         public HeroParametersData HeroParametersData = new();
-        public Map Map = new ();
-        public PhysicsData Physics = new PhysicsData();
+        public Map Map = new();
+        public PhysicsData Physics = new();
 
         public static int GenerateUid()
         {
-            return (int)(Random.value * int.MaxValue);
+            var uid = 0;
+            var buffer = new byte[4];
+            var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
+            rng.GetBytes(buffer);
+            uid = BitConverter.ToInt32(buffer, 0) & int.MaxValue;
+
+            return uid;
         }
+
     }
     [Serializable]
     public class StorageData
@@ -78,8 +85,6 @@ namespace Game.State.Data
     public class HeroParametersData
     {
         public float Hunger;
-        public float Stamina;
-        public float StaminaMax;
         public float HungerMax;
         public float MaxMass;
         public float MaxMoveSpeed;

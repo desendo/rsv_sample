@@ -10,7 +10,8 @@ namespace Game.Rules
         public LoadStartGameStateRule(List<ILoadData<StateData>> services,
             StateDataContainer defaultStateContainer)
         {
-            foreach (var service in services) service.LoadFrom(defaultStateContainer.Data);
+            foreach (var service in services)
+                service.LoadFrom(defaultStateContainer.Data);
         }
     }
 }

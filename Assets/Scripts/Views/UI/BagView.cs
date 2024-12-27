@@ -30,9 +30,9 @@ namespace Game.Views.UI
             _signalBus = Di.Instance.Get<SignalBus>();
             _gameConfig = Di.Instance.Get<GameConfig>();
 
-            Di.Instance.Get<UnitsService>().Hero.Selected.Subscribe(selected => _panel.SetActive(selected));
+            Di.Instance.Get<HeroService>().Hero.Selected.Subscribe(selected => _panel.SetActive(selected));
 
-            var service = Di.Instance.Get<UnitsService>();
+            var service = Di.Instance.Get<HeroService>();
             _heroStorage = service.HeroStorage;
 
             _heroStorage.Items.OnClear.Subscribe(HandleClear);

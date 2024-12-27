@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Game.Services;
 using Game.State.Data;
 using Game.State.Models;
-using Modules.Common;
 using UnityEngine;
 
 namespace Game.Rules
@@ -11,24 +11,27 @@ namespace Game.Rules
     {
         private readonly GameConfig _gameConfig;
         private readonly WorldItemsService _worldItemsService;
-        private readonly UnitsService _unitsService;
-        private readonly List<IModelList<IModel>> _modelServices;
+        private readonly DialogsService _dialogsService;
+        private readonly HeroService _heroService;
+        private readonly List<IModelEnum<IModel>> _modelServices;
 
-        public DoHeroJobRule(ISignalBus signalBus, UnitsService unitsService, GameConfig gameConfig,
+        public DoHeroJobRule(HeroService heroService, GameConfig gameConfig,
             WorldItemsService worldItemsService,
-            List<IModelList<IModel>> modelServices)
+            DialogsService dialogsService,
+            List<IModelEnum<IModel>> modelServices)
         {
-            _unitsService = unitsService;
+            _heroService = heroService;
             _gameConfig = gameConfig;
             _worldItemsService = worldItemsService;
+            _dialogsService = dialogsService;
             _modelServices = modelServices;
-            _unitsService.Hero.HasWayPoint.Subscribe(OnWayPointDisappear);
-            _unitsService.Hero.CurrentJob.Subscribe(OnNewJobAppeared);
+            _heroService.Hero.HasWayPoint.Subscribe(OnWayPointDisappear);
+            _heroService.Hero.CurrentJob.Subscribe(OnNewJobAppeared);
         }
 
         private void OnNewJobAppeared(HeroModel.Job obj)
         {
-            if (_unitsService.Hero.HasWayPoint.Value)
+            if (_heroService.Hero.HasWayPoint.Value)
                 return;
 
             if (obj == null)
@@ -44,14 +47,14 @@ namespace Game.Rules
 
             IModel targetModel = null;
             foreach (var modelService in _modelServices)
-            foreach (var model in modelService.GetList())
+            foreach (var model in modelService.GetEnum())
                 if (model.UId == job.JobTargetUid)
                     targetModel = model;
 
             if (targetModel == null)
             {
                 Debug.LogError("no Model for id " + job.JobTargetUid);
-                _unitsService.Hero.CurrentJob.Value = null;
+                _heroService.Hero.CurrentJob.Value = null;
                 return;
             }
             //todo здесь можно добавить стратегию
@@ -70,21 +73,21 @@ namespace Game.Rules
                     item.Scale.Value = itemParam.Size;
                     item.ViewPosition.Value = new Vector2(Random.value  * 0.1f, 0);
 
-                    _unitsService.Hero.Say($"Собрал {itemNameTitle}");
-                    _unitsService.HeroStorage.Items.Add(item);
-                    _unitsService.Hero.OnAction.Invoke();
+                    _heroService.Hero.Say($"Собрал {itemNameTitle}");
+                    _heroService.HeroStorage.Items.Add(item);
+                    _heroService.Hero.OnAction.Invoke();
 
                 }
                 else
                 {
-                    _unitsService.Hero.Say($"{itemNameTitle} тут кончилась");
+                    _heroService.Hero.Say($"{itemNameTitle} тут кончилась");
                 }
             }
 
             if (targetModel is WorldItemModel itemModel)
             {
                 var itemNameTitle = _gameConfig.Localization.GetObjectProduct(itemModel.TypeId.Value);
-                _worldItemsService.WorldItemModels.Remove(itemModel);
+                _worldItemsService.Remove(itemModel);
                 var itemParam = _gameConfig.GetItemParam(itemModel.TypeId.Value);
 
                 var item = new StorageItemModel
@@ -95,13 +98,21 @@ namespace Game.Rules
                     Scale = { Value = itemParam.Size},
                     ViewPosition = { Value = new Vector2(Random.value  * 0.1f, 0)}
                 };
-                _unitsService.Hero.Say($"Поднял {itemNameTitle}");
-                _unitsService.HeroStorage.Items.Add(item);
+                _heroService.Hero.Say($"Поднял {itemNameTitle}");
+                _heroService.HeroStorage.Items.Add(item);
 
-                _unitsService.Hero.OnAction.Invoke();
+                _heroService.Hero.OnAction.Invoke();
             }
+            if (targetModel is NpcModel npcModel)
+            {
+                if (!string.IsNullOrEmpty(npcModel.DialogConfigId))
+                {
 
-            _unitsService.Hero.CurrentJob.Value = null;
+                    _dialogsService.StartDialogRequest.Invoke(npcModel.DialogConfigId, npcModel.DialogUId);
+                    _heroService.Hero.OnAction.Invoke();
+                }
+            }
+            _heroService.Hero.CurrentJob.Value = null;
         }
 
 
@@ -109,10 +120,10 @@ namespace Game.Rules
         {
             if (hasWayPoint)
                 return;
-            if (_unitsService.Hero.CurrentJob.Value == null)
+            if (_heroService.Hero.CurrentJob.Value == null)
                 return;
 
-            PerformJob(_unitsService.Hero.CurrentJob.Value);
+            PerformJob(_heroService.Hero.CurrentJob.Value);
         }
     }
 }

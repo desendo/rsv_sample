@@ -1,21 +1,21 @@
 {
-  "name": "Game",
-  "rootNamespace": "Game",
-  "references": [
-    "GUID:e25e983326f66eb4881b00fe58780dbc",
-    "GUID:561dfbdde3153a6408d0b42bf28ce71a",
-    "GUID:97c8972a388586349a1d703e68b03e73",
-    "GUID:d8b63aba1907145bea998dd612889d6b",
-    "GUID:8242912c323d7d649b5aff6bbc5a14b0",
-    "GUID:6055be8ebefd69e48b49212b09b47b2f"
-  ],
-  "includePlatforms": [],
-  "excludePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [],
-  "noEngineReferences": false
+    "name": "Game",
+    "rootNamespace": "Game",
+    "references": [
+        "GUID:e25e983326f66eb4881b00fe58780dbc",
+        "GUID:561dfbdde3153a6408d0b42bf28ce71a",
+        "GUID:97c8972a388586349a1d703e68b03e73",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:8242912c323d7d649b5aff6bbc5a14b0",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

@@ -6,13 +6,13 @@ namespace Game.Rules
 {
     public class CalculateItemsMassRule
     {
-        private readonly UnitsService _unitsService;
+        private readonly HeroService _heroService;
 
-        public CalculateItemsMassRule(UnitsService unitsService)
+        public CalculateItemsMassRule(HeroService heroService)
         {
-            _unitsService = unitsService;
-            unitsService.HeroStorage.Items.OnAnyEvent.Subscribe(UpdateMass);
-            UpdateMass(unitsService.HeroStorage.Items);
+            _heroService = heroService;
+            heroService.HeroStorage.Items.OnAnyEvent.Subscribe(UpdateMass);
+            UpdateMass(heroService.HeroStorage.Items);
         }
 
         private void UpdateMass(ICollection<StorageItemModel> modelsCollection)
@@ -22,7 +22,7 @@ namespace Game.Rules
             {
                 mass += model.Mass.Value;
             }
-            _unitsService.HeroParameters.MassParameter.SetCurrent(mass);
+            _heroService.HeroParameters.MassParameter.SetCurrent(mass);
         }
     }
 }

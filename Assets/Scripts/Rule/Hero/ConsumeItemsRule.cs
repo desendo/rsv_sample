@@ -7,12 +7,12 @@ namespace Game.Rules
 {
     public class ConsumeItemsRule
     {
-        private readonly UnitsService _unitsService;
+        private readonly HeroService _heroService;
         private readonly GameConfig _gameConfig;
 
-        public ConsumeItemsRule(ISignalBus signalBus, UnitsService unitsService, GameConfig gameConfig)
+        public ConsumeItemsRule(ISignalBus signalBus, HeroService heroService, GameConfig gameConfig)
         {
-            _unitsService = unitsService;
+            _heroService = heroService;
             _gameConfig = gameConfig;
             signalBus.Subscribe<UIViewSignals.ConsumeItemHeroStorageRequest>(HandleConsumeItemHeroStorageRequest);
         }
@@ -20,7 +20,7 @@ namespace Game.Rules
         private void HandleConsumeItemHeroStorageRequest(UIViewSignals.ConsumeItemHeroStorageRequest obj)
         {
             StorageItemModel model = null;
-            foreach (var x in _unitsService.HeroStorage.Items)
+            foreach (var x in _heroService.HeroStorage.Items)
             {
                 if (x.UId == obj.Uid)
                 {
@@ -39,16 +39,16 @@ namespace Game.Rules
                 {
                     if (result.ActionType != ActionType.Consume) continue;
 
-                    _unitsService.Hero.Say("Использовал "+_gameConfig.Localization.GetObjectTitle(model.TypeId.Value));
+                    _heroService.Hero.Say("Использовал "+_gameConfig.Localization.GetObjectTitle(model.TypeId.Value));
                     foreach (var effect in result.InstantEffects)
                     {
                         if (effect.InstantEffectType == InstantEffectType.ReduceHunger)
                         {
-                            _unitsService.HeroParameters.HungerParameter.AddCurrent(effect.Value, true);
+                            _heroService.HeroParameters.HungerParameter.AddCurrent(effect.Value, true);
                         }
                     }
                 }
-                _unitsService.HeroStorage.Items.Remove(model);
+                _heroService.HeroStorage.Items.Remove(model);
 
                 break;
             }

@@ -7,22 +7,22 @@ namespace Game.Rules
 {
     public class MoveHeroByWayPointRule
     {
-        private readonly UnitsService _unitsService;
+        private readonly HeroService _heroService;
         private readonly IUpdateProvider _updateProvider;
         private IDisposable _moveRoutine;
 
-        public MoveHeroByWayPointRule(SignalBus signalBus, UnitsService unitsService,
+        public MoveHeroByWayPointRule(SignalBus signalBus, HeroService heroService,
             IUpdateProvider updateProvider)
         {
-            _unitsService = unitsService;
+            _heroService = heroService;
             _updateProvider = updateProvider;
-            _unitsService.Hero.HasWayPoint.Subscribe(HandleHeroHasWayPointChanged);
-            _unitsService.Hero.WayPoint.Subscribe(HandleWayPointChanged);
+            _heroService.Hero.HasWayPoint.Subscribe(HandleHeroHasWayPointChanged);
+            _heroService.Hero.WayPoint.Subscribe(HandleWayPointChanged);
         }
 
         private void HandleWayPointChanged(Vector3 obj)
         {
-            if (_unitsService.Hero.HasWayPoint.Value)
+            if (_heroService.Hero.HasWayPoint.Value)
                 RotateToWayPoint();
         }
 
@@ -43,32 +43,32 @@ namespace Game.Rules
 
         private void RotateToWayPoint()
         {
-            var target = _unitsService.Hero.WayPoint.Value;
-            var self = _unitsService.Hero.Position.Value;
+            var target = _heroService.Hero.WayPoint.Value;
+            var self = _heroService.Hero.Position.Value;
             var dir = (target - self).normalized;
             var quaternion = Quaternion.LookRotation(dir, Vector3.up);
-            _unitsService.Hero.Rotation.Value = quaternion;
+            _heroService.Hero.Rotation.Value = quaternion;
         }
 
         //подобные вещи обычно выносятся в утилки,
         //но здесь и далее максимум всего в контроллерах для наглядности и быстроты правки
         private void MoveHeroRoutine(float deltaTime)
         {
-            var target = _unitsService.Hero.WayPoint.Value;
-            var self = _unitsService.Hero.Position.Value;
+            var target = _heroService.Hero.WayPoint.Value;
+            var self = _heroService.Hero.Position.Value;
 
             var delta = target - self;
             var deltaMag = delta.magnitude;
 
             var dir = delta / deltaMag;
 
-            var stepMag =  _unitsService.HeroParameters.MaxMoveSpeed.Value * _unitsService.HeroParameters.MoveSpeedFactor.Value * deltaTime;
+            var stepMag =  _heroService.HeroParameters.MaxMoveSpeed.Value * _heroService.HeroParameters.MoveSpeedFactor.Value * deltaTime;
             var step = dir * stepMag;
 
             if (deltaMag - stepMag < 0.1f)
-                _unitsService.Hero.HasWayPoint.Value = false;
+                _heroService.Hero.HasWayPoint.Value = false;
             else
-                _unitsService.Hero.Position.Value += step;
+                _heroService.Hero.Position.Value += step;
         }
     }
 }

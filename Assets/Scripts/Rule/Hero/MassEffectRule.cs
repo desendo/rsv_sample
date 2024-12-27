@@ -4,27 +4,27 @@ namespace Game.Rules
 {
     public class MassEffectRule
     {
-        private readonly UnitsService _unitsService;
+        private readonly HeroService _heroService;
 
-        public MassEffectRule(UnitsService unitsService)
+        public MassEffectRule(HeroService heroService)
         {
-            _unitsService = unitsService;
-            _unitsService.HeroParameters.MassParameter.NormalizedUnclamped.Subscribe(HandleMass);
+            _heroService = heroService;
+            _heroService.HeroParameters.MassParameter.NormalizedUnclamped.Subscribe(HandleMass);
         }
 
         private void HandleMass(float normalizedValue)
         {
             if (normalizedValue > 1f)
             {
-                _unitsService.HeroParameters.MoveSpeedFactor.Value = 1 / normalizedValue;
-                _unitsService.Hero.Say($"Перегрузка. Скорость {(int)(_unitsService.HeroParameters.MoveSpeedFactor.Value * 100)}%");
+                _heroService.HeroParameters.MoveSpeedFactor.Value = 1 / normalizedValue;
+                _heroService.Hero.Say($"Перегрузка. Скорость {(int)(_heroService.HeroParameters.MoveSpeedFactor.Value * 100)}%");
 
             }
             else
             {
-                if(_unitsService.HeroParameters.MoveSpeedFactor.Value < 1f)
-                    _unitsService.Hero.Say($"Перегрузки больше нет");
-                _unitsService.HeroParameters.MoveSpeedFactor.Value = 1f;
+                if(_heroService.HeroParameters.MoveSpeedFactor.Value < 1f)
+                    _heroService.Hero.Say($"Перегрузки больше нет");
+                _heroService.HeroParameters.MoveSpeedFactor.Value = 1f;
 
             }
 
