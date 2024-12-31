@@ -26,21 +26,25 @@ namespace Game.Signals
         public struct RestartGameRequest
         {
         }
+
         public class CancelDialogRequest
         {
         }
+
         public class TogglePause
         {
         }
+
         public class SetLanguageRequest
         {
-            public SystemLanguage Lang { get; }
-
             public SetLanguageRequest(SystemLanguage lang)
             {
-                this.Lang = lang;
+                Lang = lang;
             }
+
+            public SystemLanguage Lang { get; }
         }
+
         public class ActualizeBagItemPositionRequest
         {
             public ActualizeBagItemPositionRequest(int uid, Vector3 position, Quaternion rotation)
@@ -54,6 +58,7 @@ namespace Game.Signals
             public Vector3 Position { get; }
             public Quaternion Rotation { get; }
         }
+
         public class ConsumeItemHeroStorageRequest
         {
             public ConsumeItemHeroStorageRequest(int uid)
@@ -63,6 +68,7 @@ namespace Game.Signals
 
             public int Uid { get; }
         }
+
         public class DropItemHeroStorageRequest
         {
             public DropItemHeroStorageRequest(int uid)
@@ -79,31 +85,32 @@ namespace Game.Signals
 
             public ZoomMapRequest(bool plus)
             {
-                this.Plus = plus;
+                Plus = plus;
             }
         }
+
         public struct ToggleViewShownRequest<T>
         {
-
         }
+
         public class HintRequest
         {
-            public IModel Model { get; }
-
             public HintRequest(IModel model)
             {
-                this.Model = model;
+                Model = model;
             }
+
+            public IModel Model { get; }
         }
 
         public class UnHintRequest
         {
-            public IModel model { get; }
-
             public UnHintRequest(IModel model)
             {
                 this.model = model;
             }
+
+            public IModel model { get; }
         }
 
         public struct ToggleInventoryShownRequest
@@ -116,12 +123,12 @@ namespace Game.Signals
 
         public class DialogOptionRequest
         {
-            public int Index { get; }
-
             public DialogOptionRequest(int index)
             {
                 Index = index;
             }
+
+            public int Index { get; }
         }
     }
 

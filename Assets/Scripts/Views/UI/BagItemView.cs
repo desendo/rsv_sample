@@ -5,11 +5,11 @@ using Game.State.Models;
 using Modules.Common;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 
 namespace Game.Views.UI
 {
-    public class BagItemView : MonoBehaviour, IDisposable, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    public class BagItemView : MonoBehaviour, IDisposable, IPointerClickHandler, IPointerEnterHandler,
+        IPointerExitHandler
     {
         [SerializeField] private GameObject _dropMarker;
         private readonly List<IDisposable> _subscriptions = new();
@@ -23,6 +23,27 @@ namespace Game.Views.UI
             _model = null;
             UId = 0;
             _dropMarker.SetActive(false);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left)
+                Di.Instance.Get<SignalBus>().Fire(new UIViewSignals.DropItemHeroStorageRequest(UId));
+
+            if (eventData.button == PointerEventData.InputButton.Right)
+                Di.Instance.Get<SignalBus>().Fire(new UIViewSignals.ConsumeItemHeroStorageRequest(UId));
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            _dropMarker.SetActive(true);
+            Di.Instance.Get<SignalBus>().Fire(new UIViewSignals.HintRequest(_model));
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            _dropMarker.SetActive(false);
+            Di.Instance.Get<SignalBus>().Fire(new UIViewSignals.UnHintRequest(_model));
         }
 
         public void Bind(StorageItemModel model)
@@ -43,28 +64,6 @@ namespace Game.Views.UI
             Di.Instance.Get<SignalBus>().Fire(
                 new UIViewSignals.ActualizeBagItemPositionRequest(UId, transform.localPosition,
                     transform.localRotation));
-        }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if(eventData.button == PointerEventData.InputButton.Left)
-                Di.Instance.Get<SignalBus>().Fire(new UIViewSignals.DropItemHeroStorageRequest(UId));
-
-            if(eventData.button == PointerEventData.InputButton.Right)
-                Di.Instance.Get<SignalBus>().Fire(new UIViewSignals.ConsumeItemHeroStorageRequest(UId));
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            _dropMarker.SetActive(true);
-            Di.Instance.Get<SignalBus>().Fire(new UIViewSignals.HintRequest(_model));
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            _dropMarker.SetActive(false);
-            Di.Instance.Get<SignalBus>().Fire(new UIViewSignals.UnHintRequest(_model));
-
         }
     }
 }

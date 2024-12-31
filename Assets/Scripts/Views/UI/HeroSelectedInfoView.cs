@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Game.Services;
-using Modules.Reactive.Values;
 using TMPro;
 using UnityEngine;
 
@@ -15,10 +14,7 @@ namespace Game.Views.UI
 
         private void Awake()
         {
-            foreach (var parameterView in _parameterViews)
-            {
-                parameterView.gameObject.SetActive(false);
-            }
+            foreach (var parameterView in _parameterViews) parameterView.gameObject.SetActive(false);
             _heroService = Di.Instance.Get<HeroService>();
             _heroService.Hero.Selected.Subscribe(x => _panel.SetActive(x));
             _heroService.Hero.Speech.Subscribe(s => _speechLog.text = s);

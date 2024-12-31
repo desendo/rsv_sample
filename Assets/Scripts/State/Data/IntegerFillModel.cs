@@ -3,7 +3,6 @@
 namespace Game.State.Data
 {
     [Serializable]
-
     public class IntegerFillData
     {
         public int Max;

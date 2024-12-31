@@ -12,6 +12,7 @@ public class BaseNode : Node
 {
     private readonly VisualElement _autocompleteContainer;
     private readonly Label _descriptionLabel;
+    private readonly VisualElement _formContainer;
     private readonly LanguageLocalizationAsset _localizationAsset;
     private readonly VisualElement _rootGraphView;
     private readonly Button _selectButton;
@@ -20,7 +21,6 @@ public class BaseNode : Node
     private ListView _autocompleteListView;
     private bool _autocompleteVisible;
     private string _value;
-    private readonly VisualElement _formContainer;
 
     public BaseNode(LanguageLocalizationAsset localizationAsset, VisualElement rootGraphView)
     {
@@ -64,7 +64,7 @@ public class BaseNode : Node
                 display = DisplayStyle.None
             }
         };
-        
+
         _formContainer = new VisualElement
         {
             style =
@@ -126,6 +126,7 @@ public class BaseNode : Node
 
         dropdownMenu.ShowAsContext();
     }
+
     private void AddNewLocalizationEntry(string id, string value)
     {
         if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(value))
@@ -147,6 +148,7 @@ public class BaseNode : Node
         Value = id;
         UpdateDescription();
     }
+
     private void ShowAddNewValueForm(string newId)
     {
         // Создаём форму добавления нового значения
@@ -278,13 +280,9 @@ public class BaseNode : Node
         }
         else
         {
-
             CloseAutocomplete();
 
-            if (input != null && !string.IsNullOrWhiteSpace(input))
-            {
-                ShowAddNewValueForm(input);
-            }
+            if (input != null && !string.IsNullOrWhiteSpace(input)) ShowAddNewValueForm(input);
         }
     }
 
@@ -293,7 +291,6 @@ public class BaseNode : Node
         _autocompleteContainer.Clear();
 
         _autocompleteContainer.style.display = DisplayStyle.None;
-
     }
 
     private void ShowAutocomplete(List<LanguageLocalizationAsset.IdString> entries)
@@ -339,9 +336,9 @@ public class BaseNode : Node
 
     private void CloseAutocomplete()
     {
-        if (_autocompleteContainer == null) 
+        if (_autocompleteContainer == null)
             return;
-        
+
         HideAutocomplete();
     }
 

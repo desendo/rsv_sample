@@ -11,9 +11,9 @@ using LocalizationAsset = Game.LocalizationAsset;
 
 public class NodeEditorWindow : EditorWindow
 {
-    private NodeGraphView _graphView;
     private DialogConfig _currentConfig;
     private DialogConfigAsset _dialogConfigAsset;
+    private NodeGraphView _graphView;
     private LocalizationAsset _localizationAsset;
 
     [MenuItem("Window/Node Editor")]
@@ -42,7 +42,6 @@ public class NodeEditorWindow : EditorWindow
 
     private void Dispose()
     {
-        //if (_graphView != null)
         _graphView?.Clear();
         rootVisualElement.Clear();
     }
@@ -64,41 +63,38 @@ public class NodeEditorWindow : EditorWindow
 
         foreach (var configNode in _currentConfig.DialogNodes)
         {
-
         }
 
 
+        /*
+        if (configNode?.ChildrenIds == null)
+            continue;
 
-            /*
-            if (configNode?.ChildrenIds == null)
+        var outPort = node.outputContainer[0] as Port;
+
+        foreach (var childrenId in configNode.ChildrenIds)
+        {
+            if (node.Id == childrenId)
                 continue;
 
-            var outPort = node.outputContainer[0] as Port;
+            var id = childrenId;
+            var childNode = nodes.FirstOrDefault(x => x.Id == id);
+            if (childNode == null) throw new Exception("null node index " + id);
 
-            foreach (var childrenId in configNode.ChildrenIds)
+            var childNodeInputContainer = childNode.inputContainer;
+            var inPort = childNodeInputContainer[0] as Port;
+            if (inPort == null)
             {
-                if (node.Id == childrenId)
-                    continue;
+                Debug.LogWarning("inPort null");
+                continue;
+            }
 
-                var id = childrenId;
-                var childNode = nodes.FirstOrDefault(x => x.Id == id);
-                if (childNode == null) throw new Exception("null node index " + id);
-
-                var childNodeInputContainer = childNode.inputContainer;
-                var inPort = childNodeInputContainer[0] as Port;
-                if (inPort == null)
-                {
-                    Debug.LogWarning("inPort null");
-                    continue;
-                }
-
-                if (outPort != null)
-                {
-                    var edge = outPort.ConnectTo(inPort);
-                    _graphView.AddElement(edge);
-                }
-            }*/
-        
+            if (outPort != null)
+            {
+                var edge = outPort.ConnectTo(inPort);
+                _graphView.AddElement(edge);
+            }
+        }*/
     }
 
 
@@ -114,10 +110,7 @@ public class NodeEditorWindow : EditorWindow
         var index = 0;
         foreach (var node in _graphView.nodes)
         {
-
             if (node is DialogNode dialogNode)
-            {
-
                 _currentConfig.DialogNodes.Add(new DialogNodeConfig
                 {
                     Value = dialogNode.Value,
@@ -126,11 +119,8 @@ public class NodeEditorWindow : EditorWindow
                     Parent = dialogNode.GetConnectedParentNodes(),
                     Position = dialogNode.GetPosition()
                 });
-            }
             if (node is ChoiceNode choiceNode)
-            {
-
-                _currentConfig.ChoiceNodes.Add(new ChoiceNodeConfig()
+                _currentConfig.ChoiceNodes.Add(new ChoiceNodeConfig
                 {
                     Value = choiceNode.Value,
                     Id = index,
@@ -138,11 +128,8 @@ public class NodeEditorWindow : EditorWindow
                     Position = choiceNode.GetPosition(),
                     Parent = choiceNode.GetConnectedParentNodes()
                 });
-            }
             if (node is ConditionNode conditionNode)
-            {
-
-                _currentConfig.ConditionNodes.Add(new ConditionNodeConfig()
+                _currentConfig.ConditionNodes.Add(new ConditionNodeConfig
                 {
                     Value = conditionNode.Value,
                     Id = index,
@@ -150,20 +137,25 @@ public class NodeEditorWindow : EditorWindow
                     Type = conditionNode.ConditionType,
                     Position = conditionNode.GetPosition()
                 });
-            }
+            if (node is ActionNode actionNode)
+                _currentConfig.ConditionNodes.Add(new ConditionNodeConfig
+                {
+                    Value = conditionNode.Value,
+                    Id = index,
+                    Children = conditionNode.GetChildrenNodesIndexes(),
+                    Type = conditionNode.ConditionType,
+                    Position = conditionNode.GetPosition()
+                });
             index++;
         }
 
 
-
-        // Закрываем окно
         Close();
     }
 
     private void OnDisable()
     {
         Dispose();
-        // Удаляем GraphView из окна при закрытии
     }
 
 
@@ -180,4 +172,3 @@ public class NodeEditorWindow : EditorWindow
         window.LoadConfig();
     }
 }
-//#endif

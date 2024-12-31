@@ -22,13 +22,12 @@ namespace Game.Rules.Camera
             var delta = Input.mouseScrollDelta.y;
             var shiftDelta = _cameraService.Rotation.Value * Vector3.forward * (_gameConfig.CameraZoomStep * delta);
             var targetValue = _cameraService.Position.Value + shiftDelta;
-            if(targetValue.y > _gameConfig.CameraZoomMaxHeight )
+            if (targetValue.y > _gameConfig.CameraZoomMaxHeight)
                 return;
-            if(targetValue.y  < _gameConfig.CameraZoomMinHeight )
+            if (targetValue.y < _gameConfig.CameraZoomMinHeight)
                 return;
 
             _cameraService.Position.Value = targetValue;
-
         }
     }
 }

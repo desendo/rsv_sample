@@ -5,9 +5,8 @@ using UnityEngine;
 namespace Game
 {
     [CreateAssetMenu(menuName = "Create LocalizationAsset", fileName = "LocalizationAsset", order = 0)]
-    public class LocalizationAsset :ScriptableObject
+    public class LocalizationAsset : ScriptableObject
     {
-
         [SerializeField] public List<Language> Languages = new();
 
         [Serializable]
@@ -16,6 +15,7 @@ namespace Game
             public string Id;
             public string Value;
         }
+
         [Serializable]
         public class Language
         {

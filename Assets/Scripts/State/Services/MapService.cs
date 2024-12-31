@@ -13,17 +13,16 @@ namespace Game.Services
         public ReactiveVariable<float> MapDistance { get; } = new();
         public ReactiveVariable<bool> Shown { get; set; } = new();
 
-        public void SaveTo(StateData data)
-        {
-            data.Map.CurrentDistance = MapDistance.Value;
-            data.Map.Shown = Shown.Value;
-        }
-
         public void LoadFrom(in StateData data)
         {
             MapDistance.Value = data.Map.CurrentDistance;
             Shown.Value = data.Map.Shown;
         }
-    }
 
+        public void SaveTo(StateData data)
+        {
+            data.Map.CurrentDistance = MapDistance.Value;
+            data.Map.Shown = Shown.Value;
+        }
+    }
 }

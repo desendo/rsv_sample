@@ -55,12 +55,13 @@ namespace Game.Views.Environment.Items
             model.Rotation.Subscribe(x => transform.rotation = x).AddTo(_subscriptions);
             model.Selected.Subscribe(SetSelected).AddTo(_subscriptions);
             model.Hovered.Subscribe(SetHovered).AddTo(_subscriptions);
-
         }
+
         private void SetSelected(bool obj)
         {
             _selectionMarker.gameObject.SetActive(obj);
         }
+
         private void SetHovered(bool obj)
         {
             _hoverMarker.gameObject.SetActive(obj);

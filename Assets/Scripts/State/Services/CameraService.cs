@@ -13,12 +13,16 @@ namespace Game.Services
         public IReactiveVariable<Quaternion> Rotation { get; } = new ReactiveVariable<Quaternion>();
         public IReactiveVariable<Camera> Camera { get; } = new ReactiveVariable<Camera>();
 
-        public void RegisterCamera(Camera camera) => Camera.Value = camera;
         public void LoadFrom(in StateData data)
         {
             Position.Value = data.CameraData.Position;
             Rotation.Value = Quaternion.Euler(data.CameraData.Rotation);
             PositionShift.Value = data.CameraData.PositionShift;
+        }
+
+        public void Reset()
+        {
+            Rotating.Value = false;
         }
 
         public void SaveTo(StateData data)
@@ -28,9 +32,9 @@ namespace Game.Services
             data.CameraData.PositionShift = PositionShift.Value;
         }
 
-        public void Reset()
+        public void RegisterCamera(Camera camera)
         {
-            Rotating.Value = false;
+            Camera.Value = camera;
         }
     }
 }

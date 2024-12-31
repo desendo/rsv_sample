@@ -10,8 +10,8 @@ namespace Game.Rules
     public class DialogRule
     {
         private readonly DialogsService _dialogsService;
-        private readonly SignalBus _signalBus;
         private readonly HeroService _heroService;
+        private readonly SignalBus _signalBus;
 
         public DialogRule(DialogsService dialogsService, SignalBus signalBus, HeroService heroService)
         {
@@ -20,33 +20,29 @@ namespace Game.Rules
             _signalBus = signalBus;
             _signalBus.Subscribe<UIViewSignals.DialogOptionRequest>(HandleOptionRequest);
             _heroService = heroService;
-            _heroService.Hero.WayPoint.Subscribe(w =>
-            {
-                _dialogsService.StopDialog();
-            });
+            _heroService.Hero.WayPoint.Subscribe(w => { _dialogsService.StopDialog(); });
             _signalBus.Subscribe<UIViewSignals.CancelDialogRequest>(HandleCancelDialogRequest);
         }
 
         private void HandleOptionRequest(UIViewSignals.DialogOptionRequest obj)
         {
-            Debug.Log("option "+obj.Index);
+            Debug.Log("option " + obj.Index);
         }
 
         private void HandleStartDialogRequest(string configId, int modelUId)
         {
             DialogModel dialog = null;
             foreach (var model in _dialogsService)
-            {
                 if (model.ConfigId == configId && model.UId == modelUId)
                 {
                     dialog = model;
                     break;
                 }
-            }
 
             if (dialog == null)
             {
-                var config = Di.Instance.Get<GameConfig>().DialogConfigAsset.DialogConfigs.FirstOrDefault(x => x.Id == configId);
+                var config = Di.Instance.Get<GameConfig>().DialogConfigAsset.DialogConfigs
+                    .FirstOrDefault(x => x.Id == configId);
                 dialog = new DialogModel();
                 dialog.Init(config);
                 _dialogsService.Add(dialog);

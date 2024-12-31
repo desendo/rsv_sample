@@ -17,18 +17,15 @@ namespace Game.Rules
             if (normalizedValue > 1f)
             {
                 _heroService.HeroParameters.MoveSpeedFactor.Value = 1 / normalizedValue;
-                _heroService.Hero.Say($"Перегрузка. Скорость {(int)(_heroService.HeroParameters.MoveSpeedFactor.Value * 100)}%");
-
+                _heroService.Hero.Say(
+                    $"Перегрузка. Скорость {(int)(_heroService.HeroParameters.MoveSpeedFactor.Value * 100)}%");
             }
             else
             {
-                if(_heroService.HeroParameters.MoveSpeedFactor.Value < 1f)
-                    _heroService.Hero.Say($"Перегрузки больше нет");
+                if (_heroService.HeroParameters.MoveSpeedFactor.Value < 1f)
+                    _heroService.Hero.Say("Перегрузки больше нет");
                 _heroService.HeroParameters.MoveSpeedFactor.Value = 1f;
-
             }
-
         }
-
     }
 }

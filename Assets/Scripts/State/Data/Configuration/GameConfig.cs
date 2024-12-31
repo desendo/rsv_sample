@@ -11,17 +11,18 @@ namespace Game
     [Serializable]
     public class GameConfig
     {
-        [Header("Prefabs")]
-        public List<PrefabEntry<WorldResourceView>> ResourcePrefabEntries;
+        [Header("Prefabs")] public List<PrefabEntry<WorldResourceView>> ResourcePrefabEntries;
+
         public List<PrefabEntry<WorldItemView>> WorldItemsPrefabEntries;
         public List<PrefabEntry<BagItemView>> BagItemViewPrefabEntries;
         public List<StringId<List<Result>>> ItemActionsResult;
         public DialogConfigAsset DialogConfigAsset;
         public List<MassSizeEntry> ItemParameters;
-        [Header("Strings")]
-        public Localization Localization;
-        [Header("Common parameters")]
-        public float HeroInteractionDistance;
+
+        [Header("Strings")] public Localization Localization;
+
+        [Header("Common parameters")] public float HeroInteractionDistance;
+
         public float SpeechBubbleTime;
         public float CameraZoomMinHeight;
         public float CameraZoomMaxHeight;
@@ -40,14 +41,13 @@ namespace Game
         public float MapDistanceMin;
         public int MapResolution;
         public float Gravity2d = -10;
-        
+
 
         public MassSizeEntry GetItemParam(string id)
         {
             foreach (var x in ItemParameters)
-            {
-                if (x.Id == id) return x;
-            }
+                if (x.Id == id)
+                    return x;
 
             return null;
         }
@@ -62,6 +62,7 @@ namespace Game
         public List<int> Parent;
         public Rect Position;
     }
+
     [Serializable]
     public class ConditionNodeConfig
     {
@@ -71,13 +72,24 @@ namespace Game
         public List<int> Children;
         public Rect Position;
     }
-
+    [Serializable]
+    public class ActionNodeConfig
+    {
+        public int Id;
+        public ConditionNodeType Type;
+        public string Value;
+        public Rect Position;
+    }
     public enum ConditionNodeType
     {
         None,
-        HasItemTypeId,
+        HasItemTypeId
     }
-
+    public enum NodeActionType
+    {
+        None,
+        Exit,
+    }
     [Serializable]
     public class DialogNodeConfig
     {
@@ -87,15 +99,16 @@ namespace Game
         public List<int> Parent;
         public Rect Position;
     }
+
     [Serializable]
     public class DialogConfig
     {
         public string Id;
-        public List<DialogNodeConfig> DialogNodes = new List<DialogNodeConfig>();
-        public List<ConditionNodeConfig> ConditionNodes = new List<ConditionNodeConfig>();
-        public List<ChoiceNodeConfig> ChoiceNodes = new List<ChoiceNodeConfig>();
-
+        public List<DialogNodeConfig> DialogNodes = new();
+        public List<ConditionNodeConfig> ConditionNodes = new();
+        public List<ChoiceNodeConfig> ChoiceNodes = new();
     }
+
     [Serializable]
     public class DialogNodeAction
     {
@@ -106,6 +119,7 @@ namespace Game
     public class Localization
     {
         [SerializeField] private List<ObjectTitleEntry> _objectTitleEntries = new();
+
         //wip
         [SerializeField] public List<Language> Languages = new();
 
@@ -130,7 +144,6 @@ namespace Game
         }
 
 
-
         [Serializable]
         public class ObjectTitleEntry
         {
@@ -140,18 +153,21 @@ namespace Game
             public string Description;
             public string Product;
         }
+
         [Serializable]
         public class IdString
         {
             public string Id;
             [FormerlySerializedAs("String")] public string Value;
         }
+
         [Serializable]
         public class Language
         {
             public SystemLanguage Id;
             public List<IdString> Strings;
         }
+
         [Serializable]
         public class CommonModelEntry
         {
@@ -159,13 +175,14 @@ namespace Game
             public string Title;
             public string Description;
         }
+
         [Serializable]
         public class JobEntry
         {
             public string Title;
         }
-
     }
+
     [Serializable]
     public class PrefabEntry<T> where T : Component
     {
@@ -180,6 +197,7 @@ namespace Game
         public float Mass;
         public float Size;
     }
+
     [Serializable]
     public class StringId<T>
     {
@@ -189,20 +207,21 @@ namespace Game
 
     public enum ActionType
     {
-        Consume,
-
+        Consume
     }
+
     public enum InstantEffectType
     {
-        ReduceHunger,
-
+        ReduceHunger
     }
+
     [Serializable]
     public class Result
     {
         public ActionType ActionType;
         public List<InstantEffect> InstantEffects;
     }
+
     [Serializable]
     public class InstantEffect
     {

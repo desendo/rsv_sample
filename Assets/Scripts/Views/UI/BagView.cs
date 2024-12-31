@@ -46,13 +46,15 @@ namespace Game.Views.UI
             _heroStorage.Width.Subscribe(x => UpdateContainerSize());
             _heroStorage.Height.Subscribe(x => UpdateContainerSize());
 
-            service.Hero.InventoryShown.Subscribe(b => _scaleHandler.localScale = Vector3.one * (b ? _gameConfig.InventoryScale : 1));
+            service.Hero.InventoryShown.Subscribe(b =>
+                _scaleHandler.localScale = Vector3.one * (b ? _gameConfig.InventoryScale : 1));
             FillItems(_heroStorage.Items);
         }
 
         private void UpdateContainerSize()
         {
-            _container.sizeDelta = new Vector2(_heroStorage.Width.Value + _widthOffset, _heroStorage.Height.Value + _heightOffset);
+            _container.sizeDelta = new Vector2(_heroStorage.Width.Value + _widthOffset,
+                _heroStorage.Height.Value + _heightOffset);
         }
 
         private void HandleTrigger(Collider2D other)

@@ -13,10 +13,7 @@ namespace Game.Rules.Infrastructure
             signalBus.Subscribe<UIViewSignals.SetLanguageRequest>(request =>
             {
                 var targetLang = gameConfig.Localization.Languages.FirstOrDefault(x => x.Id == request.Lang);
-                if (targetLang != null)
-                {
-                    LocService.Init(targetLang);
-                }
+                if (targetLang != null) LocService.Init(targetLang);
             });
         }
     }

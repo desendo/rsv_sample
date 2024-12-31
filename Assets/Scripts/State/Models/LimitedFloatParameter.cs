@@ -6,15 +6,21 @@ using UnityEngine;
 
 namespace Game.State.Models
 {
-    public class LimitedFloatParameter: IDisposable
+    public class LimitedFloatParameter : IDisposable
     {
-        private readonly List<IDisposable> _subs = new List<IDisposable>();
-        private readonly IReactiveVariable<string> _title = new ReactiveVariable<string>();
-        private readonly IReactiveVariable<float> _normalized = new ReactiveVariable<float>();
-        private readonly IReactiveVariable<float> _normalizedUnclamped = new ReactiveVariable<float>();
         private readonly IReactiveVariable<float> _current = new ReactiveVariable<float>(0);
         private readonly IReactiveVariable<float> _max = new ReactiveVariable<float>(1);
+        private readonly IReactiveVariable<float> _normalized = new ReactiveVariable<float>();
+        private readonly IReactiveVariable<float> _normalizedUnclamped = new ReactiveVariable<float>();
+        private readonly List<IDisposable> _subs = new();
+        private readonly IReactiveVariable<string> _title = new ReactiveVariable<string>();
         private readonly IReactiveVariable<string> _valueString = new ReactiveVariable<string>();
+
+        public LimitedFloatParameter()
+        {
+            Current.Subscribe(x => { UpdateValues(); });
+            Max.Subscribe(x => { UpdateValues(); });
+        }
 
         public IReadOnlyReactiveVariable<string> Title => _title;
 
@@ -27,10 +33,9 @@ namespace Game.State.Models
 
         public IReadOnlyReactiveVariable<float> Max => _max;
 
-        public LimitedFloatParameter()
+        public void Dispose()
         {
-            Current.Subscribe(x => { UpdateValues(); });
-            Max.Subscribe(x => { UpdateValues(); });
+            _subs.DisposeAndClear();
         }
 
         private void UpdateValues()
@@ -43,11 +48,6 @@ namespace Game.State.Models
         public void BindTitle(IReactiveVariable<string> title)
         {
             title.Subscribe(x => _title.Value = x).AddTo(_subs);
-        }
-
-        public void Dispose()
-        {
-            _subs.DisposeAndClear();
         }
 
         public void SetCurrent(float value)

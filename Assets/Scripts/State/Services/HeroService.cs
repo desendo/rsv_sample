@@ -11,14 +11,9 @@ namespace Game.Services
     {
         private readonly List<IModel> _models = new();
         private readonly List<ISelectableModel> _selectableModels = new();
-        private readonly List<IWorldModel> _worldModels = new();
 
         private readonly StorageAdapter _storageAdapter;
-
-        IEnumerable<IModel> IModelEnum<IModel>.GetEnum() => _models;
-
-        IEnumerable<ISelectableModel> IModelEnum<ISelectableModel>.GetEnum() => _selectableModels;
-        IEnumerable<IWorldModel> IModelEnum<IWorldModel>.GetEnum() => _worldModels;
+        private readonly List<IWorldModel> _worldModels = new();
 
 
         public HeroService()
@@ -35,6 +30,21 @@ namespace Game.Services
         public StorageModel HeroStorage { get; } = new();
         public HeroParameters HeroParameters { get; } = new();
 
+        IEnumerable<IModel> IModelEnum<IModel>.GetEnum()
+        {
+            return _models;
+        }
+
+        IEnumerable<ISelectableModel> IModelEnum<ISelectableModel>.GetEnum()
+        {
+            return _selectableModels;
+        }
+
+        IEnumerable<IWorldModel> IModelEnum<IWorldModel>.GetEnum()
+        {
+            return _worldModels;
+        }
+
         public void LoadFrom(in StateData data)
         {
             Hero.Position.Value = data.HeroData.Position;
@@ -50,7 +60,7 @@ namespace Game.Services
             else
                 Hero.CurrentJob.Value = new HeroModel.Job
                 {
-                    JobTargetUid = data.HeroData.CurrentJob.JobTargetUid,
+                    JobTargetUid = data.HeroData.CurrentJob.JobTargetUid
                 };
 
             _storageAdapter.DataToModel(data.HeroStorageItemsData, HeroStorage);
@@ -79,7 +89,7 @@ namespace Game.Services
             else
                 data.HeroData.CurrentJob = new JobData
                 {
-                    JobTargetUid = Hero.CurrentJob.Value.JobTargetUid,
+                    JobTargetUid = Hero.CurrentJob.Value.JobTargetUid
                 };
 
 

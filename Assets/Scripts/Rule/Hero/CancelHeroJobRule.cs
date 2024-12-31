@@ -20,7 +20,7 @@ namespace Game.Rules
 
         private void OnWayPointAppearanceChanged()
         {
-            if(!_heroService.Hero.HasWayPoint.Value)
+            if (!_heroService.Hero.HasWayPoint.Value)
                 _heroService.Hero.CurrentJob.Value = null;
         }
     }

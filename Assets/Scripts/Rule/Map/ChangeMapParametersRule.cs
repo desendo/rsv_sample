@@ -1,16 +1,13 @@
-﻿using System.Collections.Generic;
-using Game.Services;
+﻿using Game.Services;
 using Game.Signals;
-using Game.State.Models;
 using Modules.Common;
-using UnityEngine;
 
 namespace Game.Rules.Map
 {
     public class ChangeMapParametersRule
     {
-        private readonly MapService _mapService;
         private readonly GameConfig _gameConfig;
+        private readonly MapService _mapService;
 
 
         public ChangeMapParametersRule(MapService mapService, GameConfig gameConfig, SignalBus signalBus)
@@ -34,17 +31,14 @@ namespace Game.Rules.Map
             if (obj.Plus)
                 targetValue -= _gameConfig.MapDistanceStep;
             else
-            {
                 targetValue += _gameConfig.MapDistanceStep;
-            }
 
             if (targetValue > _gameConfig.MapDistanceMax)
                 targetValue = _gameConfig.MapDistanceMax;
             if (targetValue < _gameConfig.MapDistanceMin)
                 targetValue = _gameConfig.MapDistanceMin;
-           
+
             _mapService.MapDistance.Value = targetValue;
-            
         }
     }
 }

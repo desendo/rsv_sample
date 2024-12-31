@@ -3,22 +3,20 @@ using UnityEngine;
 
 public class BezierCurve
 {
-    private readonly Vector2 start;
     private readonly Vector2 control;
     private readonly Vector2 end;
+    private readonly Vector2 start;
 
     public BezierCurve(Vector2 start, Vector2 end)
     {
         this.start = start;
         this.end = end;
 
-        // Контрольная точка, определяющая кривизну
-        control = (start + end) / 2 + new Vector2(0, 50); // Увеличиваем по оси Y для примера
+        control = (start + end) / 2 + new Vector2(0, 50); 
     }
 
     public Vector2 GetPoint(float t)
     {
-        // Формула для Bezier кривой
         var u = 1 - t;
         var tt = t * t;
         var uu = u * u;

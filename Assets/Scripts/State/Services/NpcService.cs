@@ -9,19 +9,42 @@ namespace Game.Services
     public class NpcService : InventoryServiceBase<NpcModel>, ISaveLoadData<StateData>,
         IModelEnum<ISelectableModel>, IModelEnum<IModel>, IModelEnum<IWorldModel>, IModelEnum<IInteractionModel>
     {
-        IEnumerable<IModel> IModelEnum<IModel>.GetEnum() => GetByInterface<IModel>();
-        IEnumerable<IInteractionModel> IModelEnum<IInteractionModel>.GetEnum() => GetByInterface<IInteractionModel>();
-        IEnumerable<IWorldModel> IModelEnum<IWorldModel>.GetEnum() => GetByInterface<IWorldModel>();
-        IEnumerable<ISelectableModel> IModelEnum<ISelectableModel>.GetEnum() => GetByInterface<ISelectableModel>();
+        private readonly HashSet<int> _removedModels = new();
 
-        private HashSet<int> _removedModels = new HashSet<int>();
+        IEnumerable<IInteractionModel> IModelEnum<IInteractionModel>.GetEnum()
+        {
+            return GetByInterface<IInteractionModel>();
+        }
+
+        IEnumerable<IModel> IModelEnum<IModel>.GetEnum()
+        {
+            return GetByInterface<IModel>();
+        }
+
+        IEnumerable<ISelectableModel> IModelEnum<ISelectableModel>.GetEnum()
+        {
+            return GetByInterface<ISelectableModel>();
+        }
+
+        IEnumerable<IWorldModel> IModelEnum<IWorldModel>.GetEnum()
+        {
+            return GetByInterface<IWorldModel>();
+        }
+
+
+        public void SaveTo(StateData data)
+        {
+        }
+
+        public void LoadFrom(in StateData data)
+        {
+        }
+
         public NpcModel TryCreateOrGetModelFromView(NpcModelData data, MonoBehaviour view)
         {
             foreach (var model in this)
-            {
                 if (model.UId == data.UId)
                     return model;
-            }
 
             if (_removedModels.Contains(data.UId))
                 return null;
@@ -36,18 +59,5 @@ namespace Game.Services
             Add(newModel);
             return newModel;
         }
-
-
-        public void SaveTo(StateData data)
-        {
-
-        }
-
-        public void LoadFrom(in StateData data)
-        {
-            
-        }
-
-
     }
 }

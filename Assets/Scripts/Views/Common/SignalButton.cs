@@ -10,7 +10,7 @@ namespace Game.Views.Common
         private void Awake()
         {
             var b = GetComponent<Button>();
-            b.onClick.AddListener(()=>Di.Instance.Get<SignalBus>().Fire(new T()));
+            b.onClick.AddListener(() => Di.Instance.Get<SignalBus>().Fire(new T()));
         }
     }
 }

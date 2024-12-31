@@ -12,10 +12,8 @@ namespace Game.Rule.Inventory
         {
             _heroService = heroService;
             signalBus.Subscribe<UIViewSignals.ToggleInventoryShownRequest>(HandleToggleInventoryRequest);
-        
         }
 
-        
 
         private void HandleToggleInventoryRequest(UIViewSignals.ToggleInventoryShownRequest obj)
         {

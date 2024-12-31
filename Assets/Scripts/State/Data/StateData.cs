@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.State.Data
 {
@@ -22,14 +22,14 @@ namespace Game.State.Data
         {
             var uid = 0;
             var buffer = new byte[4];
-            var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
+            var rng = RandomNumberGenerator.Create();
             rng.GetBytes(buffer);
             uid = BitConverter.ToInt32(buffer, 0) & int.MaxValue;
 
             return uid;
         }
-
     }
+
     [Serializable]
     public class StorageData
     {
@@ -37,6 +37,7 @@ namespace Game.State.Data
         public float Width;
         public float Height;
     }
+
     [Serializable]
     public class PhysicsData
     {
@@ -52,7 +53,7 @@ namespace Game.State.Data
         public Vector3 Position;
         public float Rotation;
         public bool Selected;
-        public IntegerFillData ResourcesData = new IntegerFillData();
+        public IntegerFillData ResourcesData = new();
 
 
         [HideInInspector] public int UId;
@@ -113,6 +114,7 @@ namespace Game.State.Data
         public float ViewRotation;
         public Vector2 ViewPosition;
     }
+
     [Serializable]
     public class Map
     {

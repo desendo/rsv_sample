@@ -14,10 +14,9 @@ namespace Game.Rule.Physics
             _gameConfig = gameConfig;
             _physicsService = physicsService;
             updateProvider.OnFixedTick.Subscribe(Fixed);
-            _physicsService.PhysicsGMultiplier.Subscribe(x=>UpdateGravity());
-            _physicsService.PhysicsGBase.Subscribe(x=>UpdateGravity());
+            _physicsService.PhysicsGMultiplier.Subscribe(x => UpdateGravity());
+            _physicsService.PhysicsGBase.Subscribe(x => UpdateGravity());
             heroService.Hero.InventoryShown.Subscribe(OnInventoryShown);
-
         }
 
         private void OnInventoryShown(bool obj)
@@ -28,7 +27,7 @@ namespace Game.Rule.Physics
         private void UpdateGravity()
         {
             var y = _physicsService.PhysicsGMultiplier.Value * _physicsService.PhysicsGBase.Value;
-            Physics2D.gravity = new Vector2(0,y);
+            Physics2D.gravity = new Vector2(0, y);
         }
 
         private void Fixed(float dt)

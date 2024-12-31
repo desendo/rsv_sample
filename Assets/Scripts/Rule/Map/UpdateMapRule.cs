@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Services;
 using Game.Signals;
 using Game.State.Models;
@@ -9,11 +10,11 @@ namespace Game.Rules.Map
 {
     public class UpdateMapRule
     {
-        private readonly List<IModelEnum<IWorldModel>> _worldModelsLists;
-        private readonly MapService _mapService;
-        private readonly HeroService _heroService;
-        private readonly GameConfig _gameConfig;
         private readonly CameraService _cameraService;
+        private readonly GameConfig _gameConfig;
+        private readonly HeroService _heroService;
+        private readonly MapService _mapService;
+        private readonly List<IModelEnum<IWorldModel>> _worldModelsLists;
 
 
         public UpdateMapRule(List<IModelEnum<IWorldModel>> worldModelsLists, IUpdateProvider updateProvider,
@@ -37,51 +38,40 @@ namespace Game.Rules.Map
             var mapWidthPixels = _gameConfig.MapResolution;
             var center = _heroService.Hero.Position.Value;
             var mapDistance = _mapService.MapDistance.Value;
-            var mapShift = Vector3.one * ( mapDistance * 0.5f);
+            var mapShift = Vector3.one * (mapDistance * 0.5f);
 
             var cameraPlaneRotation = ProjectRotationOnPlane(_cameraService.Rotation.Value, Vector3.up);
             foreach (var worldModelsList in _worldModelsLists)
+            foreach (var worldModel in worldModelsList.GetEnum())
             {
-                foreach (var worldModel in worldModelsList.GetEnum())
-                {
-                    var delta = worldModel.Position.Value - center;
-                    delta = cameraPlaneRotation * delta;
-                    if(delta.x > mapDistance* 0.5f)
-                        continue;
-                    if(delta.z > mapDistance* 0.5f)
-                        continue;
-                    if(delta.x < - mapDistance* 0.5f)
-                        continue;
-                    if(delta.z < -mapDistance* 0.5f)
-                        continue;
+                var delta = worldModel.Position.Value - center;
+                delta = cameraPlaneRotation * delta;
+                if (delta.x > mapDistance * 0.5f)
+                    continue;
+                if (delta.z > mapDistance * 0.5f)
+                    continue;
+                if (delta.x < -mapDistance * 0.5f)
+                    continue;
+                if (delta.z < -mapDistance * 0.5f)
+                    continue;
 
-                    var relativePosition = (delta + mapShift) / mapDistance;
+                var relativePosition = (delta + mapShift) / mapDistance;
 
-                    var pixelCoordinates = new Vector2Int((int)(relativePosition.x  * mapWidthPixels),
-                        (int)(relativePosition.z  * mapWidthPixels ));
+                var pixelCoordinates = new Vector2Int((int)(relativePosition.x * mapWidthPixels),
+                    (int)(relativePosition.z * mapWidthPixels));
 
 
-                    var imageColor = Color.red;
-                    if (worldModel is WorldResourceModel)
-                    {
-                        imageColor = Color.yellow;
-                    }
-                    if (worldModel is HeroModel)
-                    {
-                        imageColor = Color.blue;
-                    }
-                    _mapService.Pixels.Add(new (pixelCoordinates, imageColor));
-
-                }
+                var imageColor = Color.red;
+                if (worldModel is WorldResourceModel) imageColor = Color.yellow;
+                if (worldModel is HeroModel) imageColor = Color.blue;
+                _mapService.Pixels.Add(new ValueTuple<Vector2Int, Color>(pixelCoordinates, imageColor));
             }
-
         }
 
         private Quaternion ProjectRotationOnPlane(Quaternion originalRotation, Vector3 planeNormal)
         {
-
-            Vector3 forward = originalRotation * Vector3.forward;
-            Vector3 forwardOnPlane = Vector3.ProjectOnPlane(forward, planeNormal).normalized;
+            var forward = originalRotation * Vector3.forward;
+            var forwardOnPlane = Vector3.ProjectOnPlane(forward, planeNormal).normalized;
             return Quaternion.FromToRotation(forwardOnPlane, Vector3.forward);
         }
     }

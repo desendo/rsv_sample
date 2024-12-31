@@ -26,8 +26,8 @@ namespace Game.State.Data.DataAdapters
                     {
                         Value = dataItem.ViewPosition
                     },
-                    Mass = { Value = entry.Mass},
-                    Scale = { Value = entry.Size}
+                    Mass = { Value = entry.Mass },
+                    Scale = { Value = entry.Size }
                 };
                 model.Items.Add(item);
             }
@@ -47,7 +47,7 @@ namespace Game.State.Data.DataAdapters
                     TypeId = item.TypeId.Value,
                     UId = item.UId,
                     ViewRotation = item.ViewRotation.Value,
-                    ViewPosition = item.ViewPosition.Value,
+                    ViewPosition = item.ViewPosition.Value
                 });
             }
         }

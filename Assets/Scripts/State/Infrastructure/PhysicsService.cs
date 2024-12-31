@@ -9,6 +9,12 @@ namespace Game.Services
         public IReactiveVariable<bool> IsPhysics2dUpdateEnabled { get; } = new ReactiveVariable<bool>();
         public IReactiveVariable<float> PhysicsGBase { get; } = new ReactiveVariable<float>();
         public IReactiveVariable<float> PhysicsGMultiplier { get; } = new ReactiveVariable<float>();
+
+        public void LoadFrom(in GameConfig data)
+        {
+            PhysicsGBase.Value = data.Gravity2d;
+        }
+
         public void LoadFrom(in StateData data)
         {
             IsPhysics2dUpdateEnabled.Value = data.Physics.Is2dEnabled;
@@ -19,11 +25,6 @@ namespace Game.Services
         {
             data.Physics.Is2dEnabled = IsPhysics2dUpdateEnabled.Value;
             data.Physics.PhysicsGMultiplier = PhysicsGMultiplier.Value;
-        }
-
-        public void LoadFrom(in GameConfig data)
-        {
-            PhysicsGBase.Value = data.Gravity2d;
         }
     }
 }

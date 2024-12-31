@@ -8,8 +8,8 @@ namespace Game.Rules.Camera
     {
         private readonly CameraService _cameraService;
         private readonly GameConfig _gameConfig;
-        private readonly IUpdateProvider _updateProvider;
         private readonly HeroService _heroService;
+        private readonly IUpdateProvider _updateProvider;
         private IDisposable _updateFollowShiftRoutine;
 
 
@@ -28,25 +28,21 @@ namespace Game.Rules.Camera
         {
             _updateFollowShiftRoutine?.Dispose();
             if (!isMoving)
-            {
                 _cameraService.PositionShift.Value = Vector3.zero;
-            }
             else
-            {
                 _updateFollowShiftRoutine = _updateProvider.OnTick.Subscribe(UpdateFollowShiftRoutine);
-
-            }
         }
 
         private void UpdateFollowShiftRoutine(float dt)
         {
             var dir = (_heroService.Hero.WayPoint.Value - _heroService.Hero.Position.Value).normalized;
-            _cameraService.PositionShift.Value = Vector3.Lerp(_cameraService.PositionShift.Value, dir * _gameConfig.CameraFollowShiftMagnitude, _gameConfig.CameraFollowShiftGrowSpeed * dt);
+            _cameraService.PositionShift.Value = Vector3.Lerp(_cameraService.PositionShift.Value,
+                dir * _gameConfig.CameraFollowShiftMagnitude, _gameConfig.CameraFollowShiftGrowSpeed * dt);
         }
 
         private void Update(float dt)
         {
-            if(!_heroService.Hero.Selected.Value)
+            if (!_heroService.Hero.Selected.Value)
                 return;
 
             var followPoint = _cameraService.PositionShift.Value + _heroService.Hero.Position.Value;
@@ -66,9 +62,8 @@ namespace Game.Rules.Camera
                 return;
             }
 
-            _cameraService.Position.Value = Vector3.Lerp(_cameraService.Position.Value, _cameraService.Position.Value + planeDifference, dt * _gameConfig.CameraFollowSpeed);
-
+            _cameraService.Position.Value = Vector3.Lerp(_cameraService.Position.Value,
+                _cameraService.Position.Value + planeDifference, dt * _gameConfig.CameraFollowSpeed);
         }
-
     }
 }

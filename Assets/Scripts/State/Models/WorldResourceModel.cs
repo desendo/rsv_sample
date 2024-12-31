@@ -5,6 +5,7 @@ namespace Game.State.Models
 {
     public class WorldResourceModel : ISelectableModel, IWorldModel, IInteractionModel
     {
+        public IntegerFillModel Resources = new();
         public string ItemType { get; set; }
 
         public int UId { get; set; }
@@ -15,7 +16,5 @@ namespace Game.State.Models
 
         public IReactiveVariable<Vector3> Position { get; } = new ReactiveVariable<Vector3>();
         public IReactiveVariable<Quaternion> Rotation { get; } = new ReactiveVariable<Quaternion>();
-
-        public IntegerFillModel Resources = new IntegerFillModel();
     }
 }

@@ -1,5 +1,4 @@
 using Game.Services;
-using TMPro;
 using UnityEngine;
 using static UnityEngine.Input;
 
@@ -11,6 +10,8 @@ namespace Game.Rules.Camera
         private readonly GameConfig _gameConfig;
         private readonly HeroService _heroService;
 
+        private float _prevMouseX;
+
         public CameraRotateRule(CameraService cameraService, GameConfig gameConfig,
             IUpdateProvider updateProvider, HeroService heroService)
         {
@@ -21,16 +22,12 @@ namespace Game.Rules.Camera
             updateProvider.OnTick.Subscribe(Update);
         }
 
-        private float _prevMouseX;
         private void Update(float dt)
         {
-            if(!_heroService.Hero.Selected.Value)
+            if (!_heroService.Hero.Selected.Value)
                 return;
 
-            if (GetMouseButtonDown(2))
-            {
-                _cameraService.Rotating.Value = true;
-            }
+            if (GetMouseButtonDown(2)) _cameraService.Rotating.Value = true;
 
             if (_cameraService.Rotating.Value)
             {
@@ -41,13 +38,10 @@ namespace Game.Rules.Camera
                 _cameraService.Position.Value = _heroService.Hero.Position.Value + rotatedOffset;
                 _cameraService.Rotation.Value = quaternionStep * _cameraService.Rotation.Value;
             }
-            if (GetMouseButtonUp(2))
-            {
-                _cameraService.Rotating.Value = false;
-            }
+
+            if (GetMouseButtonUp(2)) _cameraService.Rotating.Value = false;
 
             _prevMouseX = mousePosition.x;
         }
-
     }
 }

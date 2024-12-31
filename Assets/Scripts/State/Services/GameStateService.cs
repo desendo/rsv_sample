@@ -12,8 +12,8 @@ namespace Game.Services
     //и, используя тот же механизм, помещать сохранение хоть в файл, хоть в облако, хоть выводить на экран для копирования
     public class GameStateDataService
     {
-        private readonly JsonSerializerSettings _settings;
         private readonly ISaveDataHandler _defaultDataHandler = new PlayerPrefsHandler();
+        private readonly JsonSerializerSettings _settings;
 
         public void Save(StateData data)
         {
@@ -24,26 +24,23 @@ namespace Game.Services
         {
             return _defaultDataHandler.Load();
         }
-
     }
 
     public class PlayerPrefsHandler : ISaveDataHandler
     {
-        private readonly JsonSerializerSettings _settings;
         private const string Key = "quicksave";
+        private readonly JsonSerializerSettings _settings;
 
         public PlayerPrefsHandler()
         {
-
             _settings = new JsonSerializerSettings();
             _settings.Converters.Add(new Vector3Converter());
             _settings.Converters.Add(new Vector2Converter());
             _settings.Converters.Add(new QuaternionConverter());
         }
+
         public void Save(StateData data)
         {
-
-
             var jsonString = JsonConvert.SerializeObject(data, _settings);
             PlayerPrefs.SetString(Key, jsonString);
             PlayerPrefs.Save();

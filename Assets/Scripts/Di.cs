@@ -1,5 +1,4 @@
 ﻿using Game.Rule.Inventory;
-using Game.State.Config;
 using Game.Rule.Physics;
 using Game.Rule.World;
 using Game.Rules;
@@ -8,6 +7,7 @@ using Game.Rules.Infrastructure;
 using Game.Rules.Map;
 using Game.Rules.UI;
 using Game.Services;
+using Game.State.Config;
 using Modules.Common;
 using Modules.DependencyInjection;
 using UnityEngine;

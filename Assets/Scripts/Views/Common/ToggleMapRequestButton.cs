@@ -4,6 +4,5 @@ namespace Game.Views.Common
 {
     public class ToggleMapRequestButton : ToggleRequestButton<UIViewSignals.ToggleMapShownRequest>
     {
-
     }
 }

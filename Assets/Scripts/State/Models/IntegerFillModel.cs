@@ -8,22 +8,43 @@ namespace Game.State.Models
 {
     public class IntegerFillModel : IDataAdapter<IntegerFillModel, IntegerFillData>
     {
-        public ReactiveVariable<int> Max { get; } = new ReactiveVariable<int>();
-        public ReactiveVariable<int> Current { get; } = new ReactiveVariable<int>();
-        public ReactiveVariable<float> CycleTime { get; } = new ReactiveVariable<float>();
-        public ReactiveVariable<float> RunTime { get; } = new ReactiveVariable<float>();
-        public ReactiveVariable<float> NormalizedCycle { get; } = new ReactiveVariable<float>();
         private int _cyclesCompleted;
 
-        public bool Started { get; private set; }
-
-        public event Action OnCycle;
         public IntegerFillModel()
         {
             OnCycle += RunOnCycle;
             CycleTime.Subscribe(x => UpdateNormalized());
             RunTime.Subscribe(x => UpdateNormalized());
         }
+
+        public ReactiveVariable<int> Max { get; } = new();
+        public ReactiveVariable<int> Current { get; } = new();
+        public ReactiveVariable<float> CycleTime { get; } = new();
+        public ReactiveVariable<float> RunTime { get; } = new();
+        public ReactiveVariable<float> NormalizedCycle { get; } = new();
+
+        public bool Started { get; private set; }
+
+        public void ModelToData(in IntegerFillModel model, in IntegerFillData data)
+        {
+            data.Max = model.Max.Value;
+            data.Current = model.Current.Value;
+            data.CycleTime = model.CycleTime.Value;
+            data.Runtime = model.RunTime.Value;
+            data.Started = model.Started;
+        }
+
+
+        public void DataToModel(in IntegerFillData data, in IntegerFillModel model)
+        {
+            model.Max.Value = data.Max;
+            model.Current.Value = data.Current;
+            model.RunTime.Value = data.Runtime;
+            model.CycleTime.Value = data.CycleTime;
+            model.SetStarted(data.Started);
+        }
+
+        public event Action OnCycle;
 
         private void UpdateNormalized()
         {
@@ -38,7 +59,7 @@ namespace Game.State.Models
 
         private void Start()
         {
-            if(CycleTime.Value <= 0f)
+            if (CycleTime.Value <= 0f)
                 throw new ArgumentOutOfRangeException();
 
             Started = true;
@@ -53,7 +74,7 @@ namespace Game.State.Models
 
         public void Update(float dt)
         {
-            if(!Started)
+            if (!Started)
                 return;
 
             var runtime = RunTime.Value;
@@ -75,31 +96,11 @@ namespace Game.State.Models
 
             if (_cyclesCompleted > 0)
             {
-
                 runtime -= _cyclesCompleted * CycleTime.Value;
                 _cyclesCompleted = 0;
             }
 
             RunTime.Value = runtime;
-        }
-
-        public void ModelToData(in IntegerFillModel model, in IntegerFillData data)
-        {
-            data.Max = model.Max.Value;
-            data.Current = model.Current.Value;
-            data.CycleTime = model.CycleTime.Value;
-            data.Runtime = model.RunTime.Value;
-            data.Started = model.Started;
-        }
-
-
-        public void DataToModel(in IntegerFillData data, in IntegerFillModel model)
-        {
-            model.Max.Value = data.Max;
-            model.Current.Value = data.Current;
-            model.RunTime.Value = data.Runtime;
-            model.CycleTime.Value = data.CycleTime;
-            model.SetStarted(data.Started);
         }
 
         private void SetStarted(bool dataStarted)

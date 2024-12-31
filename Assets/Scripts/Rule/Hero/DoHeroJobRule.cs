@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Game.Services;
 using Game.State.Data;
 using Game.State.Models;
@@ -9,11 +8,11 @@ namespace Game.Rules
 {
     public class DoHeroJobRule
     {
-        private readonly GameConfig _gameConfig;
-        private readonly WorldItemsService _worldItemsService;
         private readonly DialogsService _dialogsService;
+        private readonly GameConfig _gameConfig;
         private readonly HeroService _heroService;
         private readonly List<IModelEnum<IModel>> _modelServices;
+        private readonly WorldItemsService _worldItemsService;
 
         public DoHeroJobRule(HeroService heroService, GameConfig gameConfig,
             WorldItemsService worldItemsService,
@@ -42,7 +41,7 @@ namespace Game.Rules
 
         private void PerformJob(HeroModel.Job job)
         {
-            if(job.JobTargetUid == 0)
+            if (job.JobTargetUid == 0)
                 return;
 
             IModel targetModel = null;
@@ -57,6 +56,7 @@ namespace Game.Rules
                 _heroService.Hero.CurrentJob.Value = null;
                 return;
             }
+
             //todo здесь можно добавить стратегию
             if (targetModel is WorldResourceModel resourceModel)
             {
@@ -71,12 +71,11 @@ namespace Game.Rules
                     var itemParam = _gameConfig.GetItemParam(item.TypeId.Value);
                     item.Mass.Value = itemParam.Mass;
                     item.Scale.Value = itemParam.Size;
-                    item.ViewPosition.Value = new Vector2(Random.value  * 0.1f, 0);
+                    item.ViewPosition.Value = new Vector2(Random.value * 0.1f, 0);
 
                     _heroService.Hero.Say($"Собрал {itemNameTitle}");
                     _heroService.HeroStorage.Items.Add(item);
                     _heroService.Hero.OnAction.Invoke();
-
                 }
                 else
                 {
@@ -94,24 +93,23 @@ namespace Game.Rules
                 {
                     TypeId = { Value = itemModel.TypeId.Value },
                     UId = StateData.GenerateUid(),
-                    Mass = { Value = itemParam.Mass},
-                    Scale = { Value = itemParam.Size},
-                    ViewPosition = { Value = new Vector2(Random.value  * 0.1f, 0)}
+                    Mass = { Value = itemParam.Mass },
+                    Scale = { Value = itemParam.Size },
+                    ViewPosition = { Value = new Vector2(Random.value * 0.1f, 0) }
                 };
                 _heroService.Hero.Say($"Поднял {itemNameTitle}");
                 _heroService.HeroStorage.Items.Add(item);
 
                 _heroService.Hero.OnAction.Invoke();
             }
+
             if (targetModel is NpcModel npcModel)
-            {
                 if (!string.IsNullOrEmpty(npcModel.DialogConfigId))
                 {
-
                     _dialogsService.StartDialogRequest.Invoke(npcModel.DialogConfigId, npcModel.DialogUId);
                     _heroService.Hero.OnAction.Invoke();
                 }
-            }
+
             _heroService.Hero.CurrentJob.Value = null;
         }
 

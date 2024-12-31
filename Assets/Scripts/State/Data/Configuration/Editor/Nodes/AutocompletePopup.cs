@@ -7,17 +7,17 @@ using LocalizationAsset = Game.LocalizationAsset;
 
 public class AutocompletePopup : PopupWindowContent
 {
-    private List<LocalizationAsset.IdString> _entries;
     private readonly Action<LocalizationAsset.IdString> _onSelect;
+    private List<LocalizationAsset.IdString> _entries;
     private Vector2 _scrollPosition;
-
-    public bool HasEntries => _entries != null && _entries.Any();
 
     public AutocompletePopup(List<LocalizationAsset.IdString> entries, Action<LocalizationAsset.IdString> onSelect)
     {
         _entries = entries;
         _onSelect = onSelect;
     }
+
+    public bool HasEntries => _entries != null && _entries.Any();
 
     public override Vector2 GetWindowSize()
     {
@@ -30,13 +30,11 @@ public class AutocompletePopup : PopupWindowContent
         _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
         foreach (var entry in _entries)
-        {
             if (GUILayout.Button($"{entry.Id}: {entry.Value}", EditorStyles.miniButton))
             {
                 _onSelect?.Invoke(entry);
                 editorWindow.Close();
             }
-        }
 
         EditorGUILayout.EndScrollView();
     }
@@ -49,9 +47,6 @@ public class AutocompletePopup : PopupWindowContent
 
     public void SelectFirstEntry()
     {
-        if (_entries.Any())
-        {
-            _onSelect?.Invoke(_entries.First());
-        }
+        if (_entries.Any()) _onSelect?.Invoke(_entries.First());
     }
 }

@@ -7,8 +7,8 @@ namespace Game.Rules
 {
     public class ConsumeItemsRule
     {
-        private readonly HeroService _heroService;
         private readonly GameConfig _gameConfig;
+        private readonly HeroService _heroService;
 
         public ConsumeItemsRule(ISignalBus signalBus, HeroService heroService, GameConfig gameConfig)
         {
@@ -21,13 +21,11 @@ namespace Game.Rules
         {
             StorageItemModel model = null;
             foreach (var x in _heroService.HeroStorage.Items)
-            {
                 if (x.UId == obj.Uid)
                 {
                     model = x;
                     break;
                 }
-            }
 
             if (model == null) return;
 
@@ -39,15 +37,12 @@ namespace Game.Rules
                 {
                     if (result.ActionType != ActionType.Consume) continue;
 
-                    _heroService.Hero.Say("Использовал "+_gameConfig.Localization.GetObjectTitle(model.TypeId.Value));
+                    _heroService.Hero.Say("Использовал " + _gameConfig.Localization.GetObjectTitle(model.TypeId.Value));
                     foreach (var effect in result.InstantEffects)
-                    {
                         if (effect.InstantEffectType == InstantEffectType.ReduceHunger)
-                        {
                             _heroService.HeroParameters.HungerParameter.AddCurrent(effect.Value, true);
-                        }
-                    }
                 }
+
                 _heroService.HeroStorage.Items.Remove(model);
 
                 break;

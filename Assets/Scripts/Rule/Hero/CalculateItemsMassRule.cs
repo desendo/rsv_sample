@@ -18,10 +18,7 @@ namespace Game.Rules
         private void UpdateMass(ICollection<StorageItemModel> modelsCollection)
         {
             var mass = 0f;
-            foreach (var model in modelsCollection)
-            {
-                mass += model.Mass.Value;
-            }
+            foreach (var model in modelsCollection) mass += model.Mass.Value;
             _heroService.HeroParameters.MassParameter.SetCurrent(mass);
         }
     }

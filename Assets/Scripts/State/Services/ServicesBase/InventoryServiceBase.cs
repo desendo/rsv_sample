@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace Game.Services.ServicesBase
 {
-
     public abstract class InventoryServiceBase<T> : IReactiveCollection<T>
     {
+        private static readonly Dictionary<Type, Type[]> InterfaceCache = new();
         private readonly IReactiveCollection<T> _implementation = new ReactiveCollection<T>();
 
 
@@ -22,15 +22,6 @@ namespace Game.Services.ServicesBase
                 _interfaceCollections.Add(@interface, new List<object>());
         }
 
-        protected IEnumerable<TInterface> GetByInterface<TInterface>() where TInterface : class
-        {
-            if (_interfaceCollections.TryGetValue(typeof(TInterface), out var list))
-            {
-                return list.Cast<TInterface>();
-            }
-            Debug.LogWarning($"empty Enumerable for {typeof(TInterface)} aspect of {typeof(T)} ");
-            return Enumerable.Empty<TInterface>();
-        }
         public IEnumerator<T> GetEnumerator()
         {
             return _implementation.GetEnumerator();
@@ -43,7 +34,6 @@ namespace Game.Services.ServicesBase
 
         public void Add(T item)
         {
-
             foreach (var @interface in GetCachedInterfaces(typeof(T)))
                 _interfaceCollections[@interface].Add(item);
             _implementation.Add(item);
@@ -51,10 +41,7 @@ namespace Game.Services.ServicesBase
 
         public void Clear()
         {
-            foreach (var (key, value) in _interfaceCollections)
-            {
-                value.Clear();
-            }
+            foreach (var (key, value) in _interfaceCollections) value.Clear();
 
             _implementation.Clear();
         }
@@ -126,8 +113,12 @@ namespace Game.Services.ServicesBase
             _implementation.Set(elements);
         }
 
-
-        private static readonly Dictionary<Type, Type[]> InterfaceCache = new();
+        protected IEnumerable<TInterface> GetByInterface<TInterface>() where TInterface : class
+        {
+            if (_interfaceCollections.TryGetValue(typeof(TInterface), out var list)) return list.Cast<TInterface>();
+            Debug.LogWarning($"empty Enumerable for {typeof(TInterface)} aspect of {typeof(T)} ");
+            return Enumerable.Empty<TInterface>();
+        }
 
         private static Type[] GetCachedInterfaces(Type type)
         {
@@ -136,9 +127,8 @@ namespace Game.Services.ServicesBase
                 interfaces = type.GetInterfaces();
                 InterfaceCache[type] = interfaces;
             }
+
             return interfaces;
         }
-
-
     }
 }

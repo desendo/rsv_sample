@@ -14,8 +14,7 @@ namespace Game.State.Data.Configuration.Editor.Nodes
             return port.connections
                 .Where(edge => edge.output == port)
                 .Select(edge => edge.input.node)
-                .Select(node => allNodes.IndexOf(node)) 
-
+                .Select(node => allNodes.IndexOf(node))
                 .ToList();
         }
 
@@ -28,7 +27,6 @@ namespace Game.State.Data.Configuration.Editor.Nodes
                 .Where(edge => edge.input == port)
                 .Select(edge => edge.output.node)
                 .Select(node => allNodes.IndexOf(node))
-
                 .ToList();
         }
     }

@@ -1,4 +1,3 @@
-
 using Game.Services;
 using Game.Signals;
 using Game.State.Data;
@@ -16,9 +15,10 @@ namespace Game.Views.Npc
         [SerializeField] private Transform _3d;
 
         [SerializeField] private NpcModelData _data;
-        private NpcService _npcService;
 
         private NpcModel _model;
+        private NpcService _npcService;
+
         private void Awake()
         {
             _npcService = Di.Instance.Get<NpcService>();
@@ -28,22 +28,6 @@ namespace Game.Views.Npc
             var model = _npcService.TryCreateOrGetModelFromView(_data, this);
 
             BindModel(model);
-
-        }
-
-        private void BindModel(NpcModel model)
-        {
-            if (model == null)
-            {
-                //если модели нет, то выключаем вью
-                gameObject.SetActive(false);
-                return;
-            }
-            _model = model;
-            _model.Hovered.Subscribe(SetHovered);
-            _model.Selected.Subscribe(SetSelected);
-            _model.Rotation.Subscribe(SetRotation);
-            _model.Position.Subscribe(SetPosition);
         }
 
         //listen events and emit signals
@@ -63,6 +47,22 @@ namespace Game.Views.Npc
         public void OnPointerExit(PointerEventData eventData)
         {
             Di.Instance.Get<ISignalBus>().Fire(new WorldViewSignals.UnHoverRequest(_model));
+        }
+
+        private void BindModel(NpcModel model)
+        {
+            if (model == null)
+            {
+                //если модели нет, то выключаем вью
+                gameObject.SetActive(false);
+                return;
+            }
+
+            _model = model;
+            _model.Hovered.Subscribe(SetHovered);
+            _model.Selected.Subscribe(SetSelected);
+            _model.Rotation.Subscribe(SetRotation);
+            _model.Position.Subscribe(SetPosition);
         }
 
         private void SetPosition(Vector3 obj)

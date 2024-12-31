@@ -1,35 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using Game;
-using Game.State.Data.Configuration.Editor.Nodes;
+﻿using Game;
 using UnityEditor.Experimental.GraphView;
-
-
 using UnityEngine.UIElements;
 
-public sealed class DialogNode : BaseNode
+public sealed class DialogNode : BaseNode, IChoiceResult
 {
-
-    public DialogNode(LocalizationAsset localizationAsset, VisualElement rootGraphView): base(localizationAsset, rootGraphView)
+    public DialogNode(LocalizationAsset localizationAsset, VisualElement rootGraphView) : base(localizationAsset,
+        rootGraphView)
     {
-        this.title = "Вопрос";
+        title = "Вопрос";
 
         style.width = 200;
 
-        // Добавляем порты ввода и вывода
-        var inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(ChoiceNode));
+        var inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi,
+            typeof(ChoiceNode));
         inputPort.portName = "Причина";
         inputContainer.Add(inputPort);
 
-        var outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(ChoiceNode));
+        var outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi,
+            typeof(ChoiceNode));
         outputPort.portName = "Вариант";
         outputContainer.Add(outputPort);
 
 
         RefreshExpandedState();
         RefreshPorts();
-
     }
-
-
 }

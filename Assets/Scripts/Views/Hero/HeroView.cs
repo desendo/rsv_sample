@@ -16,9 +16,9 @@ namespace Game.Views.Hero
         [SerializeField] private GameObject _hoverMarker;
         [SerializeField] private Transform _3d;
         [SerializeField] private Transform _hands;
+        private Sequence _actionSequence;
         private IModel _model;
         private Sequence _sequence;
-        private Sequence _actionSequence;
         private List<IDisposable> _subscriptions;
 
         private void Awake()
@@ -77,6 +77,7 @@ namespace Game.Views.Hero
             _sequence.Insert(0, _3d.DOLocalRotate(new Vector3(0, 0, 1), 0.2f));
             _sequence.SetLoops(-1, LoopType.Yoyo);
         }
+
         private void StartActionAnimation()
         {
             _hands.localRotation = Quaternion.identity;
@@ -85,9 +86,10 @@ namespace Game.Views.Hero
             _actionSequence = DOTween.Sequence();
             _actionSequence.OnKill(() => _hands.localRotation = Quaternion.identity);
             _actionSequence.OnComplete(() => _hands.localRotation = Quaternion.identity);
-            _actionSequence.Append(_hands.DOLocalRotate(new Vector3(-360,0,0), 0.4f, RotateMode.FastBeyond360).SetEase(Ease.Linear));
-
+            _actionSequence.Append(_hands.DOLocalRotate(new Vector3(-360, 0, 0), 0.4f, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear));
         }
+
         private void SetPosition(Vector3 obj)
         {
             transform.position = obj;

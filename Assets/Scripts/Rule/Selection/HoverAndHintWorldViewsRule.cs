@@ -6,17 +6,16 @@ using Game.State.Models;
 using Modules.Common;
 using UnityEngine;
 
-
 namespace Game.Rules
 {
     public class HoverAndHintWorldViewsRule
     {
-        private readonly GameConfig _gameConfig;
-        private readonly IUpdateProvider _updateProvider;
         private readonly CameraService _cameraService;
+        private readonly GameConfig _gameConfig;
         private readonly HeroService _heroService;
         private readonly HintService _hintService;
         private readonly List<IModelEnum<ISelectableModel>> _selectableServices;
+        private readonly IUpdateProvider _updateProvider;
         private IDisposable _hintDelayProcedure;
 
 
@@ -55,7 +54,7 @@ namespace Game.Rules
 
         private void HandleUnHoverRequest(WorldViewSignals.UnHoverRequest unHoverRequest)
         {
-            if(unHoverRequest.Model is not ISelectableModel selectableModel)
+            if (unHoverRequest.Model is not ISelectableModel selectableModel)
                 return;
 
             _hintDelayProcedure?.Dispose();
@@ -70,10 +69,7 @@ namespace Game.Rules
 
         private void HandleHoverRequest(WorldViewSignals.HoverRequest hoverRequest)
         {
-            if (hoverRequest.Model is ISelectableModel selectableModel)
-            {
-                selectableModel.Hovered.Value = true;
-            }
+            if (hoverRequest.Model is ISelectableModel selectableModel) selectableModel.Hovered.Value = true;
 
             Hint(hoverRequest.Model);
         }
@@ -93,8 +89,8 @@ namespace Game.Rules
                 {
                     hintHeaderText = "Лкм";
                     hintText = $"выбросить {_gameConfig.Localization.GetObjectTitle(model.TypeId.Value)}";
-
                 }
+
                 if (model is WorldItemModel worldItemModel)
                 {
                     if (_heroService.Hero.Selected.Value)
@@ -103,7 +99,9 @@ namespace Game.Rules
                         hintHeaderText = "Пкм";
                     }
                     else
+                    {
                         hintText = _gameConfig.Localization.GetObjectTitle(model.TypeId.Value);
+                    }
                 }
 
 
@@ -135,16 +133,14 @@ namespace Game.Rules
         private Vector3 GetHintScreenPosition(IModel model)
         {
             if (model is IWorldModel worldModel)
-            {
                 return RectTransformUtility.WorldToScreenPoint(_cameraService.Camera.Value, worldModel.Position.Value);
-            }
             return Vector3.zero;
         }
 
         private void HintDelayProcedure(float dt, Action callback)
         {
             _hintService.AddTime(dt);
-            if(_hintService.IsTimeToShow)
+            if (_hintService.IsTimeToShow)
                 callback.Invoke();
         }
 

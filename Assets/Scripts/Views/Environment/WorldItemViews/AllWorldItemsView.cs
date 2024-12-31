@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Game.Services;
 using Game.State.Models;
-using Game.Views.Environment.Items;
 using UnityEngine;
 
 namespace Game.Views.Environment.Items
@@ -59,13 +57,11 @@ namespace Game.Views.Environment.Items
         {
             PrefabEntry<WorldItemView> prefabEntry = null;
             foreach (var x in _gameConfig.WorldItemsPrefabEntries)
-            {
                 if (x.Id == model.TypeId.Value)
                 {
                     prefabEntry = x;
                     break;
                 }
-            }
 
             var prefab = prefabEntry?.Prefab;
             if (prefab == null)

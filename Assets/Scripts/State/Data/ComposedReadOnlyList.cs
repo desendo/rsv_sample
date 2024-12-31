@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Game.State.Data
@@ -27,7 +29,7 @@ namespace Game.State.Data
                     index -= list.Count;
                 }
 
-                throw new System.ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
         }
 
@@ -36,15 +38,11 @@ namespace Game.State.Data
         public IEnumerator<T> GetEnumerator()
         {
             foreach (var list in _lists)
-            {
-                foreach (var item in list)
-                {
-                    yield return item;
-                }
-            }
+            foreach (var item in list)
+                yield return item;
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }

@@ -10,13 +10,12 @@ namespace Game
     public class GroundView : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private GameObject _wayPointMarker;
-        public Plane Plane { get; } = new Plane(Vector3.up, Vector3.zero);
 
         private HeroModel _hero;
+        public Plane Plane { get; } = new(Vector3.up, Vector3.zero);
 
         private void Awake()
         {
-
             _hero = Di.Instance.Get<HeroService>().Hero;
             _hero.HasWayPoint.Subscribe(b => UpdateMarker());
             _hero.Selected.Subscribe(b => UpdateMarker());

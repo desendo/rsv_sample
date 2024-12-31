@@ -62,7 +62,8 @@ namespace Game.Rules
 
             var dir = delta / deltaMag;
 
-            var stepMag =  _heroService.HeroParameters.MaxMoveSpeed.Value * _heroService.HeroParameters.MoveSpeedFactor.Value * deltaTime;
+            var stepMag = _heroService.HeroParameters.MaxMoveSpeed.Value *
+                          _heroService.HeroParameters.MoveSpeedFactor.Value * deltaTime;
             var step = dir * stepMag;
 
             if (deltaMag - stepMag < 0.1f)

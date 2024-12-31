@@ -7,12 +7,27 @@ using UnityEngine;
 namespace Game.Services
 {
     public class WorldItemsService : InventoryServiceBase<WorldItemModel>, ISaveLoadData<StateData>,
-         IModelEnum<ISelectableModel>, IModelEnum<IModel>, IModelEnum<IWorldModel>, IModelEnum<IInteractionModel>
+        IModelEnum<ISelectableModel>, IModelEnum<IModel>, IModelEnum<IWorldModel>, IModelEnum<IInteractionModel>
     {
-        IEnumerable<IModel> IModelEnum<IModel>.GetEnum() => GetByInterface<IModel>();
-        IEnumerable<IInteractionModel> IModelEnum<IInteractionModel>.GetEnum() => GetByInterface<IInteractionModel>();
-        IEnumerable<IWorldModel> IModelEnum<IWorldModel>.GetEnum() => GetByInterface<IWorldModel>();
-        IEnumerable<ISelectableModel> IModelEnum<ISelectableModel>.GetEnum() => GetByInterface<ISelectableModel>();
+        IEnumerable<IInteractionModel> IModelEnum<IInteractionModel>.GetEnum()
+        {
+            return GetByInterface<IInteractionModel>();
+        }
+
+        IEnumerable<IModel> IModelEnum<IModel>.GetEnum()
+        {
+            return GetByInterface<IModel>();
+        }
+
+        IEnumerable<ISelectableModel> IModelEnum<ISelectableModel>.GetEnum()
+        {
+            return GetByInterface<ISelectableModel>();
+        }
+
+        IEnumerable<IWorldModel> IModelEnum<IWorldModel>.GetEnum()
+        {
+            return GetByInterface<IWorldModel>();
+        }
 
         public void LoadFrom(in StateData data)
         {
@@ -33,7 +48,7 @@ namespace Game.Services
         {
             data.WorldItemsData.Clear();
             foreach (var model in this)
-                data.WorldItemsData.Add(new WorldItemData()
+                data.WorldItemsData.Add(new WorldItemData
                 {
                     Position = model.Position.Value,
                     Rotation = model.Rotation.Value.eulerAngles.y,
@@ -42,6 +57,5 @@ namespace Game.Services
                     UId = model.UId
                 });
         }
-
     }
 }

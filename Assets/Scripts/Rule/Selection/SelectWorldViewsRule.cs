@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Game.Services;
 using Game.Signals;
 using Game.State.Models;
 using Modules.Common;
@@ -10,7 +9,6 @@ namespace Game.Rules
 {
     public class SelectWorldViewsRule
     {
-
         private readonly List<IModelEnum<ISelectableModel>> _selectableServices;
         private IDisposable _hintDelayProcedure;
 
@@ -30,10 +28,7 @@ namespace Game.Rules
         private void HandleSelectRequest(WorldViewSignals.SelectRequest selectRequest)
         {
             DeselectAll();
-            if (selectRequest.Model is ISelectableModel selectableModel)
-            {
-                selectableModel.Selected.Value = true;
-            }
+            if (selectRequest.Model is ISelectableModel selectableModel) selectableModel.Selected.Value = true;
         }
 
 
